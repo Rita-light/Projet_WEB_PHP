@@ -1,0 +1,99 @@
+/* layout.css */
+
+:root {
+  --bleu-ciel: #00bfff;
+  --rose-flashy: #ff69b4;
+  --noir-doux: #413f3f;
+  --gris-fond: #f9f9f9;
+  --blanc: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body, html {
+  height: 100%;
+  font-family: 'Segoe UI', sans-serif;
+  overflow: hidden;
+  background-color: var(--gris-fond);
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 220px;
+  width: calc(100% - 220px);
+  height: 60px;
+  background: linear-gradient(to right, var(--bleu-ciel), var(--rose-flashy));
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 1000;
+  font-size: 1.4rem;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(40, 40, 40, 0.2);
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 220px;
+  background-color: var(--noir-doux);
+  padding-top: 60px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1001;
+}
+
+.sidebar nav {
+  padding: 1rem;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.sidebar nav a {
+  color: var(--blanc);
+  text-decoration: none;
+  padding: 0.8rem 1rem;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  background-color: transparent;
+  display: block;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.sidebar nav a:hover {
+  background: var(--bleu-ciel);
+  transform: translateX(5px);
+}
+
+main {
+  margin-left: 220px;
+  margin-top: 60px;
+  margin-bottom: 50px;
+  height: calc(100% - 110px);
+  overflow-y: auto;
+  padding: 2rem;
+  background-color: var(--gris-fond);
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 220px;
+  width: calc(100% - 220px);
+  height: 50px;
+  background-color: var(--noir-doux);
+  color: var(--blanc);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  font-size: 0.9rem;
+}

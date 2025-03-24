@@ -1,9 +1,10 @@
 <?php
-    $HOST       = 'host.docker.internal';
+    //$HOST       = 'host.docker.internal';
+    $HOST       = 'tp1-db-1';
     $PORT       =  3306;
-    $DBNAME     = 'test';
-    $USER       = 'test';
-    $PASSWORD   = 'test';
+    $DBNAME     = 'Universite';
+    $USER       = 'root';
+    $PASSWORD   = 'root';
 
-    $db = new PDO("mysql:host=$HOST;port=$PORT;dbname=$DBNAME", $USER, $PASSWORD);
+    $dbConnection = new PDO("mysql:host=$HOST;port=$PORT;dbname=$DBNAME", $USER, $PASSWORD);
 ?>
