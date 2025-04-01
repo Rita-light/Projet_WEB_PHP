@@ -7,4 +7,45 @@ main h1 {
     color: #444;
     font-size: 1.1rem;
   }
-  
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  label {
+    font-weight: bold;
+    color: #FF69B4;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="date"],
+  input[type="password"],
+  input[type="file"],
+  input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #87CEEB;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+
+  input[type="checkbox"] {
+    margin-right: 10px;
+  }
+
+  input[type="submit"] {
+    background-color: #FF69B4;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+
+  input[type="submit"]:hover {
+    background-color: #FF1493;
+  }

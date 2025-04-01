@@ -34,5 +34,24 @@ class GroupeEtudiant {
             ':idEtudiant' => $idEtudiant,
         ]);
     }
+
+    public static function getAssociationsByDepartement($db, $departementId) {
+        $query = "
+            SELECT G.Nom AS GroupeNom, 
+                   E.Nom, 
+                   E.Prenom
+            FROM Groupe_Etudiant GE
+            JOIN Groupe G ON GE.ID_Groupe = G.ID
+            JOIN Cours C ON G.ID_Cours = C.ID
+            JOIN Etudiant E ON GE.ID_Etudiant = E.ID
+            WHERE C.ID_Departement = :departementId
+            ORDER BY G.Nom, E.Nom
+        ";
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':departementId', $departementId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }
 ?>

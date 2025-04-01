@@ -38,5 +38,107 @@ class Professeur extends Individu {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public static function readByID($dbConnection, $id) {
+        $query = "
+            SELECT 
+                Professeur.ID, Professeur.Nom, Professeur.Prenom, Professeur.DateNaissance, 
+                Professeur.Email, Professeur.DateEmbauche, Professeur.Coordonnateur, 
+                Departement.Nom AS Departement
+            FROM Professeur
+            LEFT JOIN Departement ON Professeur.ID_Departement = Departement.ID
+            WHERE Professeur.ID = :id
+        ";
+        $stmt = $dbConnection->prepare($query);
+        $stmt->bindValue(':id', $id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC); // Retourne les données sous forme de tableau associatif
+    }
+
+    public static function getIdDepartement($dbConnection, $idEnseignant){
+        $queryDept = "
+            SELECT ID_Departement 
+            FROM Professeur
+                WHERE ID = :idEnseignant;
+        ";
+        $stmtDept = $dbConnection->prepare($queryDept);
+        $stmtDept->bindValue(':idEnseignant', $idEnseignant);
+        $stmtDept->execute();
+        $departementId = $stmtDept->fetchColumn();
+
+        return $departementId;
+    }
+
+    public static function update($dbConnection, $id, $nom, $prenom, $dateNaissance, $email) {
+        $query = "
+            UPDATE Professeur
+            SET 
+                Nom = :nom,
+                Prenom = :prenom,
+                DateNaissance = :dateNaissance,
+                Email = :email
+            WHERE ID = :id
+        ";
+        $stmt = $dbConnection->prepare($query);
+        $stmt->execute([
+            ':id' => $id,
+            ':nom' => $nom,
+            ':prenom' => $prenom,
+            ':dateNaissance' => $dateNaissance,
+            ':email' => $email
+        ]);
+    }
+
+
+    public static function getProfByDepartement($dbConnection, $departementId) {
+        $queryEnseignants = "
+            SELECT ID, Nom, Prenom 
+            FROM Professeur 
+            WHERE ID_Departement = :departementId
+        ";
+        $stmtEnseignants = $dbConnection->prepare($queryEnseignants);
+        $stmtEnseignants->bindValue(':departementId', $departementId);
+        $stmtEnseignants->execute();
+        $enseignantsOptions = $stmtEnseignants->fetchAll(PDO::FETCH_ASSOC);
+
+        return $enseignantsOptions;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public static function getGroupesParCours($dbConnection, $idProfesseur) {
+        $query = "
+            SELECT 
+                Cours.Nom AS NomCours,
+                Cours.Description,
+                Groupe.Numero AS NumeroGroupe,
+                Groupe.Nom AS NomGroupe
+            FROM Groupe_Professeur
+            JOIN Groupe ON Groupe_Professeur.ID_Groupe = Groupe.ID
+            JOIN Cours ON Groupe.ID_Cours = Cours.ID
+            WHERE Groupe_Professeur.ID_Professeur = :idProfesseur
+            ORDER BY Cours.Nom, Groupe.Numero;
+        ";
+
+        $stmt = $dbConnection->prepare($query);
+        $stmt->bindValue(':idProfesseur', $idProfesseur);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC); // Retourne les données sous forme de tableau associatif
+    }
 }
 ?>

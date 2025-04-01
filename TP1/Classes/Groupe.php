@@ -49,5 +49,20 @@ class Groupe {
         $stmt = $dbConnection->prepare($query);
         $stmt->execute([':id' => $id]);
     }
+
+
+    public static function getGroupsByDepartement($db, $departementId) {
+        $query = "
+            SELECT Groupe.ID, Groupe.Nom AS NomGroupe
+            FROM Groupe
+            JOIN Cours ON Groupe.ID_Cours = Cours.ID
+            WHERE Cours.ID_Departement = :departementId
+        ";
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':departementId', $departementId, PDO::PARAM_INT); // Ensure proper type
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC); // Return the result as an associative array
+    }
+
 }
 ?>

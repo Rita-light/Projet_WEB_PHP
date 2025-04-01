@@ -1,0 +1,165 @@
+/* Styles généraux */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #F0F8FF;
+    margin: 0;
+    padding: 0;
+  }
+  
+  header {
+    background-color: #FF69B4;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+  }
+  
+  main {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Styles des titres */
+  h1 {
+    color: #000;
+    text-align: center;
+  }
+  
+  h2 {
+    color: #FF69B4;
+    margin-bottom: 15px;
+  }
+  
+  /* Styles des liens */
+  a {
+    display: block;
+    margin: 15px 0;
+    padding: 10px;
+    background-color: #87CEEB;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  a:hover {
+    background-color: #4682B4;
+  }
+  
+  /* Styles des formulaires */
+  .form-container {
+    margin-bottom: 20px;
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  label {
+    font-weight: bold;
+    color: #FF69B4;
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  select,
+  input[type="text"],
+  input[type="email"],
+  input[type="date"],
+  input[type="password"],
+  input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+    border: 1px solid #ebaf87;
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+  
+  input[type="submit"] {
+    background-color: #FF69B4;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+  
+  input[type="submit"]:hover {
+    background-color: #FF1493;
+  }
+  
+  /* Styles des tableaux */
+  .table-container {
+    margin-top: 20px;
+  }
+  
+  table {
+    width: 80%;
+    border-collapse: collapse;
+    border: 2px solid #87cfebb2;
+    background-color: white;
+  }
+
+  table tr:nth-child(even) {
+      background-color: #ADD8E6; /* Bleu ciel */
+  }
+
+  table tr:nth-child(odd) {
+      background-color: white; /* Optionnel : couleur des lignes impaires */
+  }
+  
+  th, td {
+    text-align: left;
+    padding: 10px;
+    border-bottom: 1px solid #87CEEB;
+  }
+  
+  th {
+    background-color: #FF69B4;
+    color: white;
+  }
+  
+  td {
+    color: #000;
+  }
+  
+  /* Styles des boutons */
+  button {
+    background-color: #FF69B4;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+  }
+  
+  button:hover {
+    background-color: #FF1493;
+  }
+
+
+  a.button {
+    display: flex;
+    padding: 10px 15px;
+    background-color: #2c9dfa; /* Couleur verte */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+}
+
+a.button:hover {
+    background-color: #3a83ba; /* Couleur au survol */
+}
+
+

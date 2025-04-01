@@ -49,5 +49,19 @@ class Cours {
         $stmt = $dbConnection->prepare($query);
         $stmt->execute([':id' => $id]);
     }
+
+    public static function getCoursByID($dbConnection, $departementId){
+        $queryCours = "
+            SELECT ID, Nom 
+            FROM Cours 
+            WHERE ID_Departement = :departementId
+        ";
+        $stmtCours = $dbConnection->prepare($queryCours);
+        $stmtCours->bindValue(':departementId', $departementId);
+        $stmtCours->execute();
+        $coursOptions = $stmtCours->fetchAll(PDO::FETCH_ASSOC);
+
+        return $coursOptions;
+    }
 }
 ?>

@@ -1,3 +1,7 @@
+<?php
+require_once '../FichierPHP/verifierConnexionEtudiant.php';
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -13,14 +17,14 @@
 
   <div class="sidebar">
     <nav>
-      <a href="#">Mes cours</a>
-      <a href="#">Mes résultats</a>
-      <a href="#">Profil</a>
+      <a href="etudiantProfile.php">Profil</a>
+      <a href="etudiantCours.php">Mes cours</a>
+      <a href="../FichierPHP/logout.php">Deconnexion</a>
     </nav>
   </div>
 
   <main>
-    <h1>Bonjour Jean Dupont</h1>
+    <h1>Bonjour <?php echo htmlspecialchars($_SESSION['user_name']); ?></h1>
     <p>Voici votre tableau de bord étudiant. Vous pouvez consulter vos cours et vos notes ici.</p>
   </main>
 
