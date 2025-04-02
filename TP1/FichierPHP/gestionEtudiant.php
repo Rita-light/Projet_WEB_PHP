@@ -103,7 +103,7 @@ function afficherEtudiants($dbConnection) {
                 <td>$dateNaissance</td>
                 <td>$email</td>
                 <td>$dateInscription</td>
-                <td>
+                <td class='button-container'>
                     <a href='../FichierHTML/gestModifierEtudiant.php?numeroDA=$numeroDA' class='button'>Modifier</a>
                     <a href='../FichierPHP/gestionEtudiant.php?action=supprimer&numeroDA=$numeroDA' class='button' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer cet étudiant ?\")'>Supprimer</a>
                 </td>

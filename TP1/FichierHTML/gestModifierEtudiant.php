@@ -30,6 +30,9 @@ if (isset($_GET['numeroDA'])) {
 <header>
     <h1>Inscription D'Étudiant</h1>
 </header>
+<nav>
+    <a href="gestEtudiant.php">Retour</a>
+</nav>
 
 <main>
     <h2>Modifier vos informations</h2>

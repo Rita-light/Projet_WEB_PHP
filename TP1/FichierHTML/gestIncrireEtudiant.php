@@ -14,7 +14,9 @@ require_once '../FichierPHP/verifierConnexionEnseignant.php';
 <header>
     <h1>Inscription D'Étudiant</h1>
 </header>
-
+<nav>
+    <a href="gestEtudiant.php">Retour</a>
+</nav>
 <main>
     <h2>Incrire un étudiant</h2>
     <form method="POST" action="../FichierPHP/gestionEtudiant.php"> 

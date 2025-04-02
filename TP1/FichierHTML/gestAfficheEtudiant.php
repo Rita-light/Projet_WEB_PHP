@@ -14,24 +14,29 @@ require_once '../FichierPHP/gestionEtudiant.php';
 <header>
     <h1>Gérer les étudians</h1>
 </header>
+<nav>
+    <a href="gestEtudiant.php">Retour</a>
+</nav>
 <body>
-    <h2>Listes des etudiants</h2>
-    <table border='1'>
-            <thead>
-                <tr>
-                    <th>Avatar</th>
-                    <th>Numéro DA</th>
-                    <th>Nom</th>
-                    <th>Prénom</th>
-                    <th>Date de Naissance</th>
-                    <th>Email</th>
-                    <th>Date d'inscription</th>
-                    <th>Opérations</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php afficherEtudiants($dbConnection); ?>
-            </tbody>
-    </table>
+    <main>
+        <h2>Listes des etudiants</h2>
+        <table border='1'>
+                <thead>
+                    <tr>
+                        <th>Avatar</th>
+                        <th>Numéro DA</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Date de Naissance</th>
+                        <th>Email</th>
+                        <th>Date d'inscription</th>
+                        <th>Opérations</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php afficherEtudiants($dbConnection); ?>
+                </tbody>
+        </table>
+    </main>
 </body>
 </html>

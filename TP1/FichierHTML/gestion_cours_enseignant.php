@@ -14,6 +14,9 @@ require_once '../FichierPHP/gestCoursProfesseur.php'
 <header>
     <h1>Gérer les Associations Cours-Enseignants</h1>
 </header>
+<nav>
+    <a href="gestionCours.php">Retour</a>
+</nav>
 
 <main>
     <h2>Liste des Associations</h2>

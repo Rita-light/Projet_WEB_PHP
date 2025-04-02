@@ -4,18 +4,42 @@ body {
     background-color: #F0F8FF;
     margin: 0;
     padding: 0;
+    width: 100%;
   }
   
   header {
     background-color: #FF69B4;
     color: white;
+    top: 0;
     text-align: center;
     padding: 15px 0;
+    width: 100%;
+    z-index: 1000;
   }
+  nav {
+    display: flex;
+    justify-content: flex-end; /* Liens alignés à droite */
+  }
+
+  nav a {
+      text-decoration: none;
+      background-color: #FF69B4; /* Rose */
+      color: #000; /* Texte noir */
+      padding: 10px 20px;
+      margin: 5px;
+      border-radius: 5px; /* Bouton stylé */
+      border: none;
+  }
+
+  nav a:hover {
+      background-color: #FFC0CB; /* Une nuance de rose pour hover */
+      color: #fff; /* Texte blanc au survol */
+  }
+
   
   main {
-    max-width: 1200px;
-    margin: 30px auto;
+    max-width: 90%;
+    margin: 30px 5%;
     padding: 20px;
     background-color: white;
     border-radius: 8px;
@@ -100,7 +124,7 @@ body {
   }
   
   table {
-    width: 80%;
+    width: 100%;
     border-collapse: collapse;
     border: 2px solid #87cfebb2;
     background-color: white;
@@ -145,11 +169,16 @@ body {
     background-color: #FF1493;
   }
 
+  .button-container {
+    display: flex; 
+    gap: 10px; 
+    justify-content: flex-start; 
+  }
 
   a.button {
-    display: flex;
+    display: inline-block;
     padding: 10px 15px;
-    background-color: #2c9dfa; /* Couleur verte */
+    background-color: #2c9dfa; 
     color: white;
     text-decoration: none;
     border-radius: 5px;
@@ -159,7 +188,7 @@ body {
 }
 
 a.button:hover {
-    background-color: #3a83ba; /* Couleur au survol */
+    background-color: #3a83ba; 
 }
 
 

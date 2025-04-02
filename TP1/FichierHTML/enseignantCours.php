@@ -60,6 +60,7 @@ require_once '../FichierPHP/recupererCoursEnseignant.php'; // Récupère les don
         <a href="listeEtudiant.php">Listes étudiants</a>
         <?php if (isset($_SESSION['is_coordonnateur']) && $_SESSION['is_coordonnateur']): ?>
             <a href="gestionCours.php">Gérer les cours</a>
+            <a href="gestEtudiant.php">Gérer les Étudiants</a>
         <?php endif; ?>
         <a href="../FichierPHP/logout.php">Déconnexion</a>
     </nav>
