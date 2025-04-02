@@ -5,10 +5,7 @@ require_once '../config/db.php'; // Connexion à la base
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $operation = $_POST['operation']; 
-    if ($operation === 'Inscrire') {
-        inscrireEtudiant($dbConnection);
-    }
-    elseif ($operation === 'modifier') {
+    if ($operation === 'modifier') {
         if (isset($_POST['numeroDA'])) {
             $numeroDA = htmlspecialchars($_POST['numeroDA']);
         } else {
@@ -17,7 +14,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
         modifierEtudiant($dbConnection, $numeroDA);
     }
-    
+    else{
+        inscrireEtudiant($dbConnection);
+    }
 }
 
 // Vérifier si une action de suppression est demandée
@@ -53,7 +52,7 @@ function inscrireEtudiant($dbConnection) {
         $email = $_POST['email'];
         $password = $_POST['password'];
         $dateInscription = date('Y-m-d');
-        //$avatarFile = $_FILES['avatar'];
+        $avatarFile = $_FILES['avatar'];
 
         if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
             $avatarFile = $_FILES['avatar'];

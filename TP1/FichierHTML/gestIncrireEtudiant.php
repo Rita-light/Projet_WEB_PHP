@@ -19,7 +19,7 @@ require_once '../FichierPHP/verifierConnexionEnseignant.php';
 </nav>
 <main>
     <h2>Incrire un étudiant</h2>
-    <form method="POST" action="../FichierPHP/gestionEtudiant.php"> 
+    <form method="POST" action="../FichierPHP/gestionEtudiant.php" enctype="multipart/form-data"> 
         <input type="hidden" name="operation" value="<?php echo isset($etudiant) ? 'modifier' : 'inscrire'; ?>">
         <label for="">Nom : </label>
         <input type="text" name="nom" required placeholder="Nom">

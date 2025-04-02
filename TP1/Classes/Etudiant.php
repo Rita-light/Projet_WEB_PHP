@@ -19,7 +19,7 @@ class Etudiant extends Individu {
         return 'Etudiant';
     }
 
-    public function create($dbConnection, $avatarFile = null) {
+    public function create($dbConnection, $avatarFile) {
         // Étape 1 : insérer sans NumeroDA
         $query = "INSERT INTO Etudiant (Nom, Prenom, DateNaissance, Email, DateInscription, Password) 
                   VALUES (:nom, :prenom, :dateNaissance, :email, :dateInscription, :password)";
@@ -160,8 +160,8 @@ class Etudiant extends Individu {
         }
         
         // Dossier où les avatars sont stockés
-        $avatarDir = 'avatars/';
-        $avatarPath = $avatarDir . 'DA' . $this->numeroDA . '.' . $fileExtension;  // Nom du fichier avec le numéro de DA et l'extension
+        $avatarDir = '../avatars/';
+        $avatarPath = $avatarDir . $this->numeroDA . '.' . $fileExtension;  // Nom du fichier avec le numéro de DA et l'extension
 
         // Déplacer le fichier téléchargé vers le répertoire de stockage
         if (move_uploaded_file($avatarFile['tmp_name'], $avatarPath)) {
