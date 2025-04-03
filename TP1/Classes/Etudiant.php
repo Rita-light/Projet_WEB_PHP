@@ -73,39 +73,40 @@ class Etudiant extends Individu {
     }
 
     public static function readByNumeroDA($dbConnection, $numeroDA) {
-        $query = "SELECT  Nom, Prenom, DateNaissance, Email FROM Etudiant WHERE NumeroDA = :numeroDA";
+        $query = "SELECT Nom, Prenom, DateNaissance, Email, Avatar FROM Etudiant WHERE NumeroDA = :numeroDA";
         $stmt = $dbConnection->prepare($query);
         $stmt->bindValue(':numeroDA', $numeroDA);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC); // Retourne un tableau associatif
+        return $stmt->fetch(PDO::FETCH_ASSOC); // Retourne un tableau associatif avec les données
     }
 
-    public static function updateByNumeroDA($dbConnection, $numeroDA, $nom, $prenom, $dateNaissance) {
+
+
+    public static function updateByNumeroDA($dbConnection, $numeroDA, $nom, $prenom, $email, $dateNaissance, $avatarFile = null) {
+        if ($avatarFile && $avatarFile['error'] === UPLOAD_ERR_OK) 
+        { 
+            $etudiant = new Etudiant(null, null, null, null,null, $numeroDA, null, null, null); // Instanciez l'objet Étudiant pour accéder à la méthode d'upload 
+            $avatarPath = $etudiant->uploadAvatar($avatarFile); 
+            $query = "UPDATE Etudiant SET Avatar = :avatar WHERE NumeroDA = :numeroDA";
+            $stmt = $dbConnection->prepare($query);
+            $stmt->bindValue(':avatar', $avatarPath);
+            $stmt->bindValue(':numeroDA', $numeroDA);
+            $stmt->execute();
+        }
+        
         $query = "
             UPDATE Etudiant
-            SET Nom = :nom, Prenom = :prenom, DateNaissance = :dateNaissance
+            SET Nom = :nom, Prenom = :prenom, DateNaissance = :dateNaissance, Email =:email
             WHERE NumeroDA = :numeroDA
         ";
         $stmt = $dbConnection->prepare($query);
         $stmt->bindValue(':nom', $nom);
         $stmt->bindValue(':prenom', $prenom);
-        $stmt->bindValue(':dateNaissance', $dateNaissance);
-        $stmt->bindValue(':numeroDA', $numeroDA);
-        $stmt->execute();
-    }
-
-    public static function update($dbConnection,$numeroDA, $email, $nom, $prenom, $dateNaissance){
-        $query = "
-            UPDATE Etudiant
-            SET Nom = :nom, Prenom = :prenom, DateNaissance = :dateNaissance
-            WHERE NumeroDA = :numeroDA
-        ";
-        $stmt = $dbConnection->prepare($query);
-        $stmt->bindValue(':nom', $nom);
-        $stmt->bindValue(':prenom', $prenom);
+        $stmt->bindValue(':email', $email);
         $stmt->bindValue(':dateNaissance', $dateNaissance);
         $stmt->bindValue(':numeroDA', $numeroDA);
         return $stmt->execute();
+    
     }
 
     // Supprimer un étudiant
@@ -156,7 +157,6 @@ class Etudiant extends Individu {
         return $stmt->fetchAll(PDO::FETCH_ASSOC); // Retourne les résultats sous forme de tableau associatif
     }
 
-
     // Méthode pour télécharger l'avatar de l'étudiant
     private function uploadAvatar($avatarFile) {
         // Liste des extensions de fichiers autorisées
@@ -174,6 +174,13 @@ class Etudiant extends Individu {
         $avatarDir = '../avatars/';
         $avatarPath = $avatarDir . $this->numeroDA . '.' . $fileExtension;  // Nom du fichier avec le numéro de DA et l'extension
 
+        // Supprimer l'ancienne photo de profil si elle existe
+        $oldAvatar = glob($avatarDir . $this->numeroDA . '.*'); 
+        if (!empty($oldAvatar)) {
+            unlink($oldAvatar[0]); // Supprime l'ancien fichier
+        }
+
+
         // Déplacer le fichier téléchargé vers le répertoire de stockage
         if (move_uploaded_file($avatarFile['tmp_name'], $avatarPath)) {
             return $avatarPath;  // Retourner le chemin du fichier
@@ -184,8 +191,5 @@ class Etudiant extends Individu {
 
 
     
-
-
-
 }
 ?>

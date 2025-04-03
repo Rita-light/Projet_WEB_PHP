@@ -14,15 +14,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Récupérer les données du formulaire
     $nom = $_POST['nom'];
     $prenom = $_POST['prenom'];
+    $email = $_POST['email'];
     $dateNaissance = $_POST['dateNaissance'];
+    $avatarFile = $_FILES['avatar'];
 
     try {
         // Utiliser la méthode de la classe Etudiant pour mettre à jour
-        Etudiant::updateByNumeroDA($dbConnection, $numeroDA, $nom, $prenom, $dateNaissance);
+        Etudiant::updateByNumeroDA($dbConnection, $numeroDA, $nom, $prenom, $email, $dateNaissance, $avatarFile);
 
         // Rediriger avec un message de succès
         $_SESSION['success_message'] = "Profil mis à jour avec succès.";
-        header("Location: ../FichierHTML/etudiantProlife.php");
+        header("Location: ../FichierHTML/etudiantProfile.php");
         exit();
     } catch (PDOException $e) {
         die("Erreur lors de la mise à jour : " . $e->getMessage());

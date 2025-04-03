@@ -119,14 +119,15 @@ function modifierEtudiant($dbConnection, $numeroDA){
         
 
         // Récupérer les données du formulaire
-        $nom = htmlspecialchars($_POST['nom']);
-        $prenom = htmlspecialchars($_POST['prenom']);
-        $email = htmlspecialchars($_POST['email']);
-        $dateNaissance = htmlspecialchars($_POST['dateNaissance']);
+        $nom = $_POST['nom'];
+        $prenom = $_POST['prenom'];
+        $email = $_POST['email'];
+        $dateNaissance = $_POST['dateNaissance'];
+        $avatarFile = $_FILES['avatar'];    
 
         
         try {
-            $result = Etudiant::update($dbConnection,$numeroDA, $email, $nom, $prenom, $dateNaissance);
+            $result = Etudiant::updateByNumeroDA($dbConnection, $numeroDA, $nom, $prenom, $email, $dateNaissance, $avatarFile);
 
             if ($result) {
                 echo "<script>

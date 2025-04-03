@@ -31,7 +31,7 @@ if (!isset($etudiant) || !$etudiant) {
 
 <main>
     <h2>Modifier vos informations</h2>
-    <form method="POST" action="../FichierPHP/modifierProfileEtudiant.php">
+    <form method="POST" action="../FichierPHP/modifierProfileEtudiant.php" enctype="multipart/form-data">
         <label>Nom :</label>
         <input type="text" name="nom" value="<?php echo htmlspecialchars($etudiant['Nom']); ?>" required><br>
         
@@ -39,10 +39,13 @@ if (!isset($etudiant) || !$etudiant) {
         <input type="text" name="prenom" value="<?php echo htmlspecialchars($etudiant['Prenom']); ?>" required><br>
         
         <label>Email :</label>
-        <input type="email" name="email" value="<?php echo htmlspecialchars($etudiant['Email']); ?>" readonly><br>
+        <input type="email" name="email" value="<?php echo htmlspecialchars($etudiant['Email']); ?>" required><br>
         
         <label>Date de naissance :</label>
         <input type="date" name="dateNaissance" value="<?php echo htmlspecialchars($etudiant['DateNaissance']); ?>" required><br>
+
+        <label>Avatar actuel :</label><br>
+        <img src="<?php echo htmlspecialchars($etudiant['Avatar']); ?>" alt="Avatar de l'étudiant" width="100"><br>
         
         <label>Avatar :</label>
         <input type="file" name="avatar"><br>

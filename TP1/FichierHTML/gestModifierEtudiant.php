@@ -31,12 +31,12 @@ if (isset($_GET['numeroDA'])) {
     <h1>Inscription D'Étudiant</h1>
 </header>
 <nav>
-    <a href="gestEtudiant.php">Retour</a>
+    <a href="gestAfficheEtudiant.php">Retour</a>
 </nav>
 
 <main>
     <h2>Modifier vos informations</h2>
-    <form method="POST" action="../FichierPHP/gestionEtudiant.php">
+    <form method="POST" action="../FichierPHP/gestionEtudiant.php" enctype="multipart/form-data">
          <!-- Champ caché pour indiquer si c'est une inscription ou une modification -->
         <input type="hidden" name="operation" value="<?php echo isset($etudiant) ? 'modifier' : 'inscrire'; ?>">
         <input type="hidden" name="numeroDA" value="<?php echo $numeroDA ?>">
@@ -48,10 +48,13 @@ if (isset($_GET['numeroDA'])) {
         <input type="text" name="prenom" value="<?php echo htmlspecialchars($etudiant['Prenom']); ?>" required><br>
         
         <label>Email :</label>
-        <input type="email" name="email" value="<?php echo htmlspecialchars($etudiant['Email']); ?>" readonly><br>
+        <input type="email" name="email" value="<?php echo htmlspecialchars($etudiant['Email']); ?>" required><br>
         
         <label>Date de naissance :</label>
         <input type="date" name="dateNaissance" value="<?php echo htmlspecialchars($etudiant['DateNaissance']); ?>" required><br>
+
+        <label>Avatar :</label>
+        <input type="file" name="avatar" ><br>
         
         <input type="submit" value="Enregistrer les modifications">
     </form>
