@@ -73,7 +73,7 @@ try {
         $stmtAdd->bindValue(':idEtudiant', $idEtudiant);
         $stmtAdd->execute();
 
-        header("Location: gestGroupeEtudiant.php");
+        header("Location: ../FichierHTML/gestion_groupe_etudiant.php");
         exit();
     }
 

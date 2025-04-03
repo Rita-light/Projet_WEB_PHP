@@ -97,9 +97,7 @@
         <label>Coordonnateur :</label>
         <input type="checkbox" name="coordonnateur" <?php echo $enseignant['Coordonnateur'] ? 'checked' : ''; ?>>
 
-        <label>Avatar :</label>
-        <input type="file" name="avatar">
-
+        
         <input type="submit" value="Enregistrer les modifications">
     </form>
 </main>

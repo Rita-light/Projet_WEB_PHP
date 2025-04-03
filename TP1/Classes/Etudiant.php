@@ -127,17 +127,28 @@ class Etudiant extends Individu {
 
     public static function getCoursEtGroupe($dbConnection, $idEtudiant) {
         $query = "
-            SELECT 
-                Cours.Nom AS NomCours,
-                Cours.Description,
-                Departement.Nom AS Departement,
+           SELECT 
+                IFNULL(Cours.Nom, 'Aucun cours trouvé') AS NomCours,
+                IFNULL(Cours.Description, '') AS Description,
+                IFNULL(Departement.Nom, '') AS Departement,
                 IFNULL(Groupe.Numero, 'Pas affecté') AS Groupe
-            FROM Cours_Etudiant
-            JOIN Cours ON Cours_Etudiant.ID_Cours = Cours.ID
-            JOIN Departement ON Cours.ID_Departement = Departement.ID
-            LEFT JOIN Groupe_Etudiant ON Groupe_Etudiant.ID_Etudiant = Cours_Etudiant.ID_Etudiant
-            LEFT JOIN Groupe ON Groupe.ID = Groupe_Etudiant.ID_Groupe
-            WHERE Cours_Etudiant.ID_Etudiant = :idEtudiant;
+            FROM 
+                Cours_Etudiant
+            JOIN 
+                Cours ON Cours_Etudiant.ID_Cours = Cours.ID
+            JOIN 
+                Departement ON Cours.ID_Departement = Departement.ID
+            LEFT JOIN 
+                Groupe_Etudiant ON Groupe_Etudiant.ID_Etudiant = Cours_Etudiant.ID_Etudiant
+                            AND Groupe_Etudiant.ID_Groupe IN (
+                                SELECT ID 
+                                FROM Groupe 
+                                WHERE Groupe.ID_Cours = Cours.ID
+                            )
+            LEFT JOIN 
+                Groupe ON Groupe.ID = Groupe_Etudiant.ID_Groupe
+            WHERE 
+                Cours_Etudiant.ID_Etudiant = :idEtudiant;
         ";
         $stmt = $dbConnection->prepare($query);
         $stmt->bindValue(':idEtudiant', $idEtudiant);

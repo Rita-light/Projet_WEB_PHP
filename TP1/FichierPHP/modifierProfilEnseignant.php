@@ -23,13 +23,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         Professeur::update($dbConnection, $idEnseignant, $nom, $prenom, $dateNaissance, $email);
 
         $_SESSION['success_message'] = "Profil mis à jour avec succès.";
-        header("Location: ../FichierHTML/enseignantProfile.php");
+        header("Location: ../FichierHTML/enseignatProfile.php");
         exit();
     } catch (PDOException $e) {
         die("Erreur lors de la mise à jour : " . $e->getMessage());
     }
 } else {
-    header("Location: ../FichierHTML/enseignantProfile.php");
+    header("Location: ../FichierHTML/enseignatProfile.php");
     exit();
 }
 ?>
