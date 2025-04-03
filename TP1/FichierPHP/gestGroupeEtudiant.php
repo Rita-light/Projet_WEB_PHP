@@ -43,14 +43,15 @@ try {
 // ----------------------
 
 function afficherGroupes($db, $departementId) {
-    $groupes = Groupe::getGroupsByDepartement($db, $departementId); // Call the Groupe method
+    $groupes = Groupe::getGroupsByDepartement($db, $departementId); 
     foreach ($groupes as $groupe) {
         echo "<option value='" . htmlspecialchars($groupe['ID']) . "'>" . htmlspecialchars($groupe['NomGroupe']) . "</option>";
     }
 }
 
 function afficherEtudiants($db) {
-    $etudiants = Etudiant::readAll($db); // Fetch data from the Etudiant class
+    $etudiants = Etudiant::readAll($db); 
+    $etudiants = Etudiant::readAll($db);
     foreach ($etudiants as $etudiant) {
         echo "<option value='" . htmlspecialchars($etudiant['ID']) . "'>" . htmlspecialchars($etudiant['Nom'] . ' ' . $etudiant['Prenom']) . "</option>";
     }

@@ -32,7 +32,7 @@ require_once '../FichierPHP/verifierConnexionEnseignant.php';
         <label for="">Mot de passe : </label>
         <input type="password" name="password" required placeholder="Mot de passe">
         <label for="">Avatar : </label>
-        <input type="file" name="avatar" accept="image/*" required>
+        <input type="file" name="avatar" accept="image/*" >
         <button type="submit">Inscrire l'Étudiant</button>
     </form>
 </main>

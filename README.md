@@ -1,5 +1,5 @@
 # Projet_WEB_PHP
-Gestion du groupe des groupe des cours 
+Gestion des cours dans un collège
 
 # Fonctionnalités de l'application
 ##
@@ -36,7 +36,14 @@ En plus des fonctionnalités des enseignant, le coordonnateur peut :
 * louis.lambert@mail.com 	password123
 
 ## professeur
-* jean.dupont3@example.com 	password123 	
+* alice.lemoine1@example.com 	password123 	
+* pierre.martin2@example.com    password123
 * eric.muller15@example.com password123
 ## Coordonateur
-* jean.dupont3@example.com 		password123 	
+* jean.dupont3@example.com 		password123 
+* nadine.jacques18@example.com password123	
+## Fichier Important
+* fichier pour initiation de la bd : initDB.php
+* fichier pour ouverture de l'applivation : index.php
+
+Ils sont à la racine du projet

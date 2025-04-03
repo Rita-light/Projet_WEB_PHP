@@ -22,7 +22,7 @@ class Etudiant extends Individu {
     /**
      * Methode qui permet de creer et d'ajouter un nouvel étudiant dans la bd
      */
-    public function create($dbConnection, $avatarFile) {
+    public function create($dbConnection, $avatarFile = NULL) {
         // Étape 1 : insérer sans NumeroDA
         $query = "INSERT INTO Etudiant (Nom, Prenom, DateNaissance, Email, DateInscription, Password) 
                   VALUES (:nom, :prenom, :dateNaissance, :email, :dateInscription, :password)";
@@ -74,6 +74,7 @@ class Etudiant extends Individu {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
     public static function readByNumeroDA($dbConnection, $numeroDA) {
         $query = "SELECT Nom, Prenom, DateNaissance, Email, Avatar FROM Etudiant WHERE NumeroDA = :numeroDA";
