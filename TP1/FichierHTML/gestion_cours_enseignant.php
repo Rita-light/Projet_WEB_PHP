@@ -34,7 +34,7 @@ require_once '../FichierPHP/gestCoursProfesseur.php'
                     <td><?php echo htmlspecialchars($assoc['NomCours']); ?></td>
                     <td><?php echo htmlspecialchars($assoc['NomEnseignant']); ?></td>
                     <td>
-                        <form method="POST" action="delete_cours_enseignant.php">
+                        <form method="POST" action="../FichierPHP/delete_cours_enseignant.php">
                             <input type="hidden" name="association_id" value="<?php echo htmlspecialchars($assoc['AssociationID']); ?>">
                             <input type="submit" value="Supprimer">
                         </form>

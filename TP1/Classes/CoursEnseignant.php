@@ -1,4 +1,6 @@
 <?php
+require_once '../config/db.php'; 
+
 class CoursEnseignant {
     private $idCours;
     private $idProfesseur;
@@ -41,6 +43,14 @@ class CoursEnseignant {
         $associations = $stmtAssociations->fetchAll(PDO::FETCH_ASSOC);
         
         return $associations;
+    }
+
+    public static function delete($dbConnection, $associationID) {
+        $query = "DELETE FROM Cours_Enseignant WHERE ID = :associationID";
+        $stmt = $dbConnection->prepare($query);
+        $stmt->bindValue(':associationID', $associationID, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->rowCount() ;
     }
 }
 ?>
