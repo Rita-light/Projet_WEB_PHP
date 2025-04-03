@@ -19,6 +19,9 @@ class Etudiant extends Individu {
         return 'Etudiant';
     }
 
+    /**
+     * Methode qui permet de creer et d'ajouter un nouvel étudiant dans la bd
+     */
     public function create($dbConnection, $avatarFile) {
         // Étape 1 : insérer sans NumeroDA
         $query = "INSERT INTO Etudiant (Nom, Prenom, DateNaissance, Email, DateInscription, Password) 

@@ -27,52 +27,8 @@ try {
         $idGroupe = $_POST['groupe'];
         $idEtudiant = $_POST['etudiant'];
 
-        // Vérifier si l'étudiant est inscrit au cours du groupe
-        $queryCheckCours = "
-            SELECT Cours_Etudiant.ID_Cours
-            FROM Cours_Etudiant
-            JOIN Groupe ON Groupe.ID_Cours = Cours_Etudiant.ID_Cours
-            WHERE Groupe.ID = :idGroupe AND Cours_Etudiant.ID_Etudiant = :idEtudiant
-        ";
-        $stmtCheckCours = $dbConnection->prepare($queryCheckCours);
-        $stmtCheckCours->bindValue(':idGroupe', $idGroupe);
-        $stmtCheckCours->bindValue(':idEtudiant', $idEtudiant);
-        $stmtCheckCours->execute();
-        $isInscrit = $stmtCheckCours->fetch();
-
-        if (!$isInscrit) {
-            die("Erreur : L'étudiant n'est pas inscrit au cours de ce groupe.");
-        }
-
-        // Vérifier si l'étudiant est déjà dans un autre groupe pour ce cours
-        $queryCheckGroupe = "
-            SELECT Groupe_Etudiant.ID
-            FROM Groupe_Etudiant
-            JOIN Groupe ON Groupe_Etudiant.ID_Groupe = Groupe.ID
-            WHERE Groupe.ID_Cours = (
-                SELECT ID_Cours FROM Groupe WHERE ID = :idGroupe
-            ) AND Groupe_Etudiant.ID_Etudiant = :idEtudiant
-        ";
-        $stmtCheckGroupe = $dbConnection->prepare($queryCheckGroupe);
-        $stmtCheckGroupe->bindValue(':idGroupe', $idGroupe);
-        $stmtCheckGroupe->bindValue(':idEtudiant', $idEtudiant);
-        $stmtCheckGroupe->execute();
-        $alreadyInGroupe = $stmtCheckGroupe->fetch();
-
-        if ($alreadyInGroupe) {
-            die("Erreur : L'étudiant appartient déjà à un autre groupe pour ce cours.");
-        }
-
-        // Ajouter l'association
-        $queryAdd = "
-            INSERT INTO Groupe_Etudiant (ID_Groupe, ID_Etudiant)
-            VALUES (:idGroupe, :idEtudiant)
-        ";
-        $stmtAdd = $dbConnection->prepare($queryAdd);
-        $stmtAdd->bindValue(':idGroupe', $idGroupe);
-        $stmtAdd->bindValue(':idEtudiant', $idEtudiant);
-        $stmtAdd->execute();
-
+        GroupeEtudiant::assign($dbConnection, $idEtudiant, $idGroupe);
+        
         header("Location: ../FichierHTML/gestion_groupe_etudiant.php");
         exit();
     }

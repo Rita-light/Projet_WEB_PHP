@@ -1,0 +1,42 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #F0F8FF;
+  }
+
+  header {
+    background-color: #FF69B4;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+  }
+
+  main {
+    max-width: 600px;
+    margin: 50px auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  h1 {
+    color: #000;
+  }
+
+  a {
+    display: block;
+    margin: 15px 0;
+    padding: 10px;
+    background-color: #87CEEB;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+
+  a:hover {
+    background-color:rgb(80, 186, 228);
+  }

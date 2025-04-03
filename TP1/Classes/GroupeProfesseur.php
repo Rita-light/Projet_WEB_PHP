@@ -1,4 +1,5 @@
 <?php
+
 class GroupeProfesseur {
     private $idGroupe;
     private $idProfesseur;
@@ -9,13 +10,29 @@ class GroupeProfesseur {
     }
 
     // Assigner un professeur à un groupe
-    public function assign($dbConnection) {
-        $query = "INSERT INTO Groupe_Professeur (ID_Groupe, ID_Professeur) VALUES (:idGroupe, :idProfesseur)";
-        $stmt = $dbConnection->prepare($query);
-        $stmt->execute([
-            ':idGroupe' => $this->idGroupe,
-            ':idProfesseur' => $this->idProfesseur,
-        ]);
+    public static function assign($dbConnection, $idGroupe, $idProfesseurAssoc) {
+        $queryCheckProf = "
+            SELECT ID 
+            FROM Groupe_Professeur
+            WHERE ID_Groupe = :idGroupe
+        ";
+        $stmtCheckProf = $dbConnection->prepare($queryCheckProf);
+        $stmtCheckProf->bindValue(':idGroupe', $idGroupe);
+        $stmtCheckProf->execute();
+        $professeurExistant = $stmtCheckProf->fetch();
+
+        if (!$professeurExistant) {
+            $queryAddProfesseur = "
+                INSERT INTO Groupe_Professeur (ID_Groupe, ID_Professeur)
+                VALUES (:idGroupe, :idProfesseur)
+            ";
+            $stmtAddProfesseur = $dbConnection->prepare($queryAddProfesseur);
+            $stmtAddProfesseur->bindValue(':idGroupe', $idGroupe);
+            $stmtAddProfesseur->bindValue(':idProfesseur', $idProfesseurAssoc);
+            $stmtAddProfesseur->execute();
+        } else {
+            die("Erreur : Ce groupe a déjà un professeur.");
+        }
     }
 
     // Lire tous les groupes assignés à un professeur donné

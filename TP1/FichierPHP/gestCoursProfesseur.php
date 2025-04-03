@@ -44,15 +44,7 @@ try {
         $idCours = $_POST['cours'];
         $idEnseignantAssoc = $_POST['enseignant'];
 
-        $queryAddAssoc = "
-            INSERT INTO Cours_Enseignant (ID_Cours, ID_Professeur)
-            VALUES (:idCours, :idEnseignant)
-        ";
-        $stmtAddAssoc = $dbConnection->prepare($queryAddAssoc);
-        $stmtAddAssoc->bindValue(':idCours', $idCours);
-        $stmtAddAssoc->bindValue(':idEnseignant', $idEnseignantAssoc);
-        $stmtAddAssoc->execute();
-        //CoursEnseignant::assign($dbConnection, $idCours, $idEnseignantAssoc);
+        CoursEnseignant::assign($dbConnection, $idCours, $idEnseignantAssoc);
 
         // Redirection pour éviter un nouvel envoi du formulaire
         header("Location: gestion_cours_enseignant.php");

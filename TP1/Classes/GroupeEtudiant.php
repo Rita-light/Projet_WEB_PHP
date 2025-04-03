@@ -17,6 +17,67 @@ class GroupeEtudiant {
         ]);
     }
 
+    /**
+     * Assigne un étudiant à un groupe après vérifications.
+     *
+     * Cette méthode vérifie d'abord si l'étudiant est inscrit au cours du groupe.
+     * Ensuite, elle s'assure que l'étudiant n'est pas déjà dans un autre groupe pour ce cours.
+     * Si ces conditions sont remplies, l'étudiant est ajouté au groupe.
+     *
+     * @param PDO $dbConnection Connexion à la base de données.
+     * @param int $idEtudiant Identifiant de l'étudiant.
+     * @param int $idGroupe Identifiant du groupe.
+     * @return void
+     */
+    public static function assign($dbConnection, $idEtudiant, $idGroupe){
+        // Vérifier si l'étudiant est inscrit au cours du groupe
+        $queryCheckCours = "
+            SELECT Cours_Etudiant.ID_Cours
+            FROM Cours_Etudiant
+            JOIN Groupe ON Groupe.ID_Cours = Cours_Etudiant.ID_Cours
+            WHERE Groupe.ID = :idGroupe AND Cours_Etudiant.ID_Etudiant = :idEtudiant
+        ";
+        $stmtCheckCours = $dbConnection->prepare($queryCheckCours);
+        $stmtCheckCours->bindValue(':idGroupe', $idGroupe);
+        $stmtCheckCours->bindValue(':idEtudiant', $idEtudiant);
+        $stmtCheckCours->execute();
+        $isInscrit = $stmtCheckCours->fetch();
+
+        if (!$isInscrit) {
+            die("Erreur : L'étudiant n'est pas inscrit au cours de ce groupe.");
+        }
+
+        // Vérifier si l'étudiant est déjà dans un autre groupe pour ce cours
+        $queryCheckGroupe = "
+            SELECT Groupe_Etudiant.ID
+            FROM Groupe_Etudiant
+            JOIN Groupe ON Groupe_Etudiant.ID_Groupe = Groupe.ID
+            WHERE Groupe.ID_Cours = (
+                SELECT ID_Cours FROM Groupe WHERE ID = :idGroupe
+            ) AND Groupe_Etudiant.ID_Etudiant = :idEtudiant
+        ";
+        $stmtCheckGroupe = $dbConnection->prepare($queryCheckGroupe);
+        $stmtCheckGroupe->bindValue(':idGroupe', $idGroupe);
+        $stmtCheckGroupe->bindValue(':idEtudiant', $idEtudiant);
+        $stmtCheckGroupe->execute();
+        $alreadyInGroupe = $stmtCheckGroupe->fetch();
+
+        if ($alreadyInGroupe) {
+            die("Erreur : L'étudiant appartient déjà à un autre groupe pour ce cours.");
+        }
+
+        // Ajouter l'association
+        $queryAdd = "
+            INSERT INTO Groupe_Etudiant (ID_Groupe, ID_Etudiant)
+            VALUES (:idGroupe, :idEtudiant)
+        ";
+        $stmtAdd = $dbConnection->prepare($queryAdd);
+        $stmtAdd->bindValue(':idGroupe', $idGroupe);
+        $stmtAdd->bindValue(':idEtudiant', $idEtudiant);
+        $stmtAdd->execute();
+
+    }
+
     public static function readByGroupe($dbConnection, $idGroupe) {
         $query = "SELECT * FROM Etudiant 
                   INNER JOIN Groupe_Etudiant ON Etudiant.ID = Groupe_Etudiant.ID_Etudiant

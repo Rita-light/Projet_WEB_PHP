@@ -29,29 +29,7 @@ try {
             $idGroupe = $_POST['groupe'];
             $idProfesseurAssoc = $_POST['enseignant'];
 
-            // Vérifier si le groupe a déjà un professeur
-            $queryCheckProf = "
-                SELECT ID 
-                FROM Groupe_Professeur
-                WHERE ID_Groupe = :idGroupe
-            ";
-            $stmtCheckProf = $dbConnection->prepare($queryCheckProf);
-            $stmtCheckProf->bindValue(':idGroupe', $idGroupe);
-            $stmtCheckProf->execute();
-            $professeurExistant = $stmtCheckProf->fetch();
-
-            if (!$professeurExistant) {
-                $queryAddProfesseur = "
-                    INSERT INTO Groupe_Professeur (ID_Groupe, ID_Professeur)
-                    VALUES (:idGroupe, :idProfesseur)
-                ";
-                $stmtAddProfesseur = $dbConnection->prepare($queryAddProfesseur);
-                $stmtAddProfesseur->bindValue(':idGroupe', $idGroupe);
-                $stmtAddProfesseur->bindValue(':idProfesseur', $idProfesseurAssoc);
-                $stmtAddProfesseur->execute();
-            } else {
-                die("Erreur : Ce groupe a déjà un professeur.");
-            }
+            GroupeProfesseur::assign($dbConnection, $idGroupe, $idProfesseurAssoc);
         }
 
         // Redirection après soumission
@@ -73,7 +51,6 @@ function afficherGroupes($db, $departementId) {
 }
 
  // Récupérer les enseignants du département
-
 function afficherProfesseurs($db, $departementId) {
     $professeurs = Professeur::getProfByDepartement($db, $departementId); // Fetch data from the Professeur class
     foreach ($professeurs as $professeur) {
