@@ -1,14 +1,15 @@
 <?php
 require_once '../config/db.php'; // Connexion à la base de données
 require_once '../Classes/Etudiant.php'; // Classe Etudiant
-require_once '../FichierPHP/verifierConnexionEtudiant.php';
+require_once '../FichierPHP/verifierConnexion.php';
 
-if (!isset($_SESSION['numeroDA'])) {
+if (!isset($_SESSION['user_id'])) {
     header("Location: connexion.html");
     exit();
 }
 
-$numeroDA = $_SESSION['numeroDA']; // Utiliser le numéro DA pour identifier l'étudiant
+$id = $_SESSION['user_id']; 
+$numDA = $_SESSION['numeroDA'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Récupérer les données du formulaire
@@ -20,13 +21,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         // Utiliser la méthode de la classe Etudiant pour mettre à jour
-        Etudiant::updateByNumeroDA($dbConnection, $numeroDA, $nom, $prenom, $email, $dateNaissance, $avatarFile);
+        Etudiant::updateById($dbConnection, $id, $nom, $prenom, $email, $dateNaissance, $numDA, $avatarFile);
 
         // Rediriger avec un message de succès
         $_SESSION['success_message'] = "Profil mis à jour avec succès.";
-        header("Location: ../FichierHTML/etudiantProfile.php");
+        
         exit();
     } catch (PDOException $e) {
         die("Erreur lors de la mise à jour : " . $e->getMessage());
     }
+    
+        header("Location: ../FichierHTML/etudiantProfile.php");
 }

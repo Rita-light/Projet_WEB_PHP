@@ -1,5 +1,5 @@
 <?php
-require_once '../FichierPHP/verifierConnexionEnseignant.php';
+require_once '../FichierPHP/verifierConnexion.php';
 require_once '../config/db.php'; // Connexion à la base de données
 
 // Vérifie si un groupe a été sélectionné
@@ -12,14 +12,16 @@ $numeroGroupe = $_POST['cours']; // Récupère le numéro du groupe sélectionn�
 
 try {
     // Récupère les étudiants du groupe sélectionné
+    // Récupère les étudiants du groupe sélectionné
     $query = "
         SELECT 
-            Etudiant.NumeroDA,
-            Etudiant.Nom,
-            Etudiant.Prenom,
-            Etudiant.Email
+            Etudiant.ID,
+            Utilisateur.Nom,
+            Utilisateur.Prenom,
+            Utilisateur.Email
         FROM Groupe_Etudiant
         JOIN Etudiant ON Groupe_Etudiant.ID_Etudiant = Etudiant.ID
+        JOIN Utilisateur ON Etudiant.ID = Utilisateur.ID
         JOIN Groupe ON Groupe_Etudiant.ID_Groupe = Groupe.ID
         WHERE Groupe.Numero = :numeroGroupe;
     ";
@@ -28,6 +30,7 @@ try {
     $stmt->execute();
     $etudiants = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+
     // Affiche les étudiants dans le tableau
     if (empty($etudiants)) {
         echo "<tr><td colspan='4'>Aucun étudiant trouvé dans ce groupe.</td></tr>";
@@ -35,7 +38,7 @@ try {
         foreach ($etudiants as $etudiant) {
             echo "
             <tr>
-                <td>" . htmlspecialchars($etudiant['NumeroDA']) . "</td>
+                <td>" . htmlspecialchars($etudiant['ID']) . "</td>
                 <td>" . htmlspecialchars($etudiant['Nom']) . "</td>
                 <td>" . htmlspecialchars($etudiant['Prenom']) . "</td>
                 <td>" . htmlspecialchars($etudiant['Email']) . "</td>

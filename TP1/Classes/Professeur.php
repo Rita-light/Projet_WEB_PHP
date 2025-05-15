@@ -58,7 +58,7 @@ class Professeur extends Utilisateur {
         $query = "
             SELECT 
                 u.ID, u.Nom, u.Prenom, u.DateNaissance, u.Email,
-                p.DateEmbauche, p.Coordonnateur,
+                p.DateEmbauche, 
                 d.Nom AS Departement
             FROM Professeur p
             INNER JOIN Utilisateur u ON p.ID = u.ID
@@ -81,7 +81,7 @@ class Professeur extends Utilisateur {
     }
 
 
-    public  function updateProf($dbConnection, $id, $nom, $prenom, $dateNaissance, $email, $dateEmbauche, $idDepartement) {
+    public static function updateProf($dbConnection, $id, $nom, $prenom, $dateNaissance, $email) {
         // Mise à jour dans Utilisateur
         $queryUtilisateur = "
             UPDATE Utilisateur
@@ -97,7 +97,7 @@ class Professeur extends Utilisateur {
             ':email' => $email
         ]);
 
-        // Mise à jour dans Professeur
+       /* // Mise à jour dans Professeur
         $queryProf = "
             UPDATE Professeur
             SET DateEmbauche = :dateEmbauche, Coordonnateur = :coordonnateur, ID_Departement = :idDepartement
@@ -109,7 +109,7 @@ class Professeur extends Utilisateur {
             ':dateEmbauche' => $dateEmbauche,
             ':coordonnateur' => $coordonnateur,
             ':idDepartement' => $idDepartement
-        ]);
+        ]);*/
     }
 
 

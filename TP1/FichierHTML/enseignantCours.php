@@ -1,5 +1,5 @@
 <?php
-require_once '../FichierPHP/verifierConnexionEnseignant.php'; // Vérifie si l'enseignant est connecté
+require_once '../FichierPHP/verifierConnexion.php'; // Vérifie si l'enseignant est connecté
 require_once '../FichierPHP/recupererCoursEnseignant.php'; // Récupère les données
 ?>
 
@@ -55,13 +55,16 @@ require_once '../FichierPHP/recupererCoursEnseignant.php'; // Récupère les don
 
 <div class="sidebar">
     <nav>
-        <a href="enseignant.php">Accueil</a>
-        <a href="enseignatProfile.php">Profil</a>
-        <a href="listeEtudiant.php">Listes étudiants</a>
-        <?php if (isset($_SESSION['is_coordonnateur']) && $_SESSION['is_coordonnateur']): ?>
-            <a href="gestionCours.php">Gérer les cours</a>
-            <a href="gestEtudiant.php">Gérer les Étudiants</a>
-        <?php endif; ?>
+        <a href="acceuil.php">Accueil</a>
+        <?php
+        if (!empty($_SESSION['pages_utilisateur'])) {
+            foreach ($_SESSION['pages_utilisateur'] as $page) {
+                $label = htmlspecialchars($page['label']);
+                $url = htmlspecialchars($page['url']);
+                echo "<a href='$url'>$label</a>";
+            }
+        }
+        ?>
         <a href="../FichierPHP/logout.php">Déconnexion</a>
     </nav>
 </div>

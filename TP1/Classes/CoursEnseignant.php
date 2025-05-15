@@ -54,7 +54,7 @@ class CoursEnseignant {
      * @return array Liste des associations (Nom du cours, Nom de l'enseignant, ID de l'association).
      *
      */
-    public static function getAssoc($dbConnection, $departementId){
+    /*public static function getAssoc($dbConnection, $departementId){
         $queryAssociations = "
             SELECT Cours.Nom AS NomCours, 
                 CONCAT(Professeur.Nom, ' ', Professeur.Prenom) AS NomEnseignant, 
@@ -70,6 +70,25 @@ class CoursEnseignant {
         $associations = $stmtAssociations->fetchAll(PDO::FETCH_ASSOC);
         
         return $associations;
+    }*/
+
+   public static function getAssoc($dbConnection, $departementId) {
+        $queryAssociations = "
+            SELECT Cours.Nom AS NomCours, 
+                CONCAT(Utilisateur.Nom, ' ', Utilisateur.Prenom) AS NomEnseignant, 
+                Cours_Enseignant.ID AS AssociationID
+            FROM Cours_Enseignant
+            JOIN Cours ON Cours.ID = Cours_Enseignant.ID_Cours
+            JOIN Professeur ON Professeur.ID = Cours_Enseignant.ID_Professeur
+            JOIN Utilisateur ON Utilisateur.ID = Professeur.ID 
+            WHERE Cours.ID_Departement = :departementId
+        ";
+        
+        $stmtAssociations = $dbConnection->prepare($queryAssociations);
+        $stmtAssociations->bindValue(':departementId', $departementId, PDO::PARAM_INT);
+        $stmtAssociations->execute();
+        
+        return $stmtAssociations->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public static function delete($dbConnection, $associationID) {

@@ -1,5 +1,5 @@
 <?php
-require_once '../FichierPHP/verifierConnexionEnseignant.php'; // Vérification session
+require_once '../FichierPHP/verifierConnexion.php'; // Vérification session
 require_once '../FichierPHP/gestCoursProfesseur.php'
 ?>
 

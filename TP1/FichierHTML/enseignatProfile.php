@@ -1,5 +1,5 @@
 <?php
-  require_once '../FichierPHP/verifierConnexionEnseignant.php'; 
+  require_once '../FichierPHP/verifierConnexion.php'; 
   require_once '../FichierPHP/recupererProfilEnseignant.php'; 
 ?>
 
@@ -62,13 +62,16 @@
 
 <div class="sidebar">
     <nav>
-        <a href="enseignant.php">Accueil</a>
-        <a href="enseignantCours.php">Mes cours</a>
-        <a href="listeEtudiant.php">Liste Étudiants</a>
-        <?php if (isset($_SESSION['is_coordonnateur']) && $_SESSION['is_coordonnateur']): ?>
-            <a href="gestionCours.php">Gérer les cours</a>
-            <a href="gestEtudiant.php">Gérer les Étudiants</a>
-        <?php endif; ?>
+        <a href="acceuil.php">Accueil</a>
+        <?php
+        if (!empty($_SESSION['pages_utilisateur'])) {
+            foreach ($_SESSION['pages_utilisateur'] as $page) {
+                $label = htmlspecialchars($page['label']);
+                $url = htmlspecialchars($page['url']);
+                echo "<a href='$url'>$label</a>";
+            }
+        }
+        ?>
         <a href="../FichierPHP/logout.php">Déconnexion</a>
     </nav>
 </div>
@@ -93,10 +96,6 @@
 
         <label>Département :</label>
         <input type="text" name="departement" value="<?php echo htmlspecialchars($enseignant['Departement']); ?>" readonly>
-
-        <label>Coordonnateur :</label>
-        <input type="checkbox" name="coordonnateur" <?php echo $enseignant['Coordonnateur'] ? 'checked' : ''; ?>>
-
         
         <input type="submit" value="Enregistrer les modifications">
     </form>

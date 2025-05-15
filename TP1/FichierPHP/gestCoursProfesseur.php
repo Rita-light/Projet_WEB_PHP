@@ -7,11 +7,11 @@ require_once '../Classes/CoursEnseignant.php';
 
 
 // Vérifiez si l'enseignant est connecté
-if (!isset($_SESSION['enseignant_id'])) {
+if (!isset($_SESSION['user_id'])) {
     die("Erreur : ID enseignant non défini. Veuillez vous reconnecter.");
 }
 
-$idEnseignant = $_SESSION['enseignant_id']; // ID de l'enseignant connecté
+$idEnseignant = $_SESSION['user_id']; // ID de l'enseignant connecté
 $departementId = null; // ID du département de l'enseignant
 $coursOptions = [];
 $enseignantsOptions = [];

@@ -1,5 +1,5 @@
 <?php
-require_once '../FichierPHP/verifierConnexionEnseignant.php';
+require_once '../FichierPHP/verifierConnexion.php';
 require_once '../config/db.php';
 require_once '../Classes/Professeur.php';
 require_once '../Classes/Etudiant.php';
@@ -7,11 +7,11 @@ require_once '../Classes/Groupe.php';
 require_once '../Classes/GroupeEtudiant.php';
 
 
-if (!isset($_SESSION['enseignant_id'])) {
+if (!isset($_SESSION['user_id'])) {
     die("Erreur : ID enseignant non défini.");
 }
 
-$idEnseignant = $_SESSION['enseignant_id'];
+$idEnseignant = $_SESSION['user_id'];
 $departementId = null;
 
 try {

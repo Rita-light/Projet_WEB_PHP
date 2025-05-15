@@ -1,5 +1,5 @@
 <?php
-  require_once '../FichierPHP/verifierConnexionEtudiant.php'; 
+  require_once '../FichierPHP/verifierConnexion.php'; 
   require_once '../FichierPHP/recupererCoursEtudiant.php'; 
 ?>
 
@@ -18,7 +18,7 @@
 
 <div class="sidebar">
     <nav>
-        <a href="etudiant.php">Accueil</a>
+        <a href="acceuil.php">Accueil</a>
         <a href="etudiantProfile.php">Profil</a>
         <a href="../FichierPHP/logout.php">Déconnexion</a>
     </nav>

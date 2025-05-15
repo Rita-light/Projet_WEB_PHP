@@ -1,5 +1,5 @@
 <?php
-require_once '../FichierPHP/verifierConnexionEnseignant.php'; // Vérification de connexion
+require_once '../FichierPHP/verifierConnexion.php'; // Vérification de connexion
 require_once '../FichierPHP/listeGroupe.php'; // Récupération des groupes
 ?>
 

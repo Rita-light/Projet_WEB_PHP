@@ -64,7 +64,7 @@ class Etudiant extends Utilisateur {
         $query = "
             SELECT 
                 u.ID, e.NumeroDA, u.Nom, u.Prenom, u.Email, u.DateNaissance, 
-                 e.DateInsription
+                 e.DateInscription
             FROM Etudiant e
             INNER JOIN Utilisateur u ON e.ID = u.ID
         ";
@@ -88,10 +88,10 @@ class Etudiant extends Utilisateur {
     }
 
 
-    public static function updateById($dbConnection, $id, $nom, $prenom, $email, $dateNaissance, $avatarFile = null) {
+    public static function updateById($dbConnection, $id, $nom, $prenom, $email, $dateNaissance, $numeroDA, $avatarFile = null) {
         // Met à jour l'avatar si fourni
         if ($avatarFile && $avatarFile['error'] === UPLOAD_ERR_OK) {
-            $etudiant = new Etudiant($id, $nom, $prenom, $dateNaissance, $email, null, null, null);
+            $etudiant = new Etudiant($id, $nom, $prenom, $dateNaissance, $email, '', null, null);
             $avatarPath = $etudiant->uploadAvatar($avatarFile);
 
             $query = "UPDATE Etudiant SET Avatar = :avatar WHERE ID = :id";
@@ -184,11 +184,12 @@ class Etudiant extends Utilisateur {
         $avatarDir = '../avatars/';
         $avatarPath = $avatarDir . $this->numeroDA . '.' . $fileExtension;  // Nom du fichier avec le numéro de DA et l'extension
 
-        // Supprimer l'ancienne photo de profil si elle existe
-        $oldAvatar = glob($avatarDir . $this->numeroDA . '.*'); 
-        if (!empty($oldAvatar)) {
-            unlink($oldAvatar[0]); // Supprime l'ancien fichier
+        if (!empty($oldAvatar) && is_file($oldAvatar[0])) {
+            unlink($oldAvatar[0]); // Supprime l'ancien fichier uniquement s'il existe
+        } else {
+            echo "Aucun fichier avatar à supprimer ou mauvais chemin.";
         }
+
 
 
         // Déplacer le fichier téléchargé vers le répertoire de stockage

@@ -1,68 +1,62 @@
 <?php
 require_once '../config/db.php';
 require_once '../lib/Security.php';
-session_start();
+require_once '../lib/Validation.php';
+
+/*--------------------------------------------------------------------------
+------------------------------Validation des données de connexion--------------------------------
+----------------------------------------------------------------------------*/
+   session_start();
+
+$validation = new Validation();
+
+
+
+//Nettoyage et validation de l'email
+
+$ip = $_SERVER['REMOTE_ADDR'];
+$email = isset($_POST['email']) ? $_POST['email'] : ''; 
+$email= $validation-> sanitizeInput($email); 
+$validation->required($email, 'email'); 
+$validation->maxLength($email, 'email', 75); 
+$validation->validEmail($email, 'email');
+
+// Valider le mot de passe  
+$password = isset($_POST['password']) ? $_POST['password'] : ''; 
+$validation->required($password, 'password'); 
+$validation->minLength($password, 'password', 4);
+
+if ($validation->fails()) {
+    $erreurs = $validation->getErrors();
+    $message = implode("\n", $erreurs);
+
+    echo "<script>
+        alert(" . json_encode($message) . ");
+        window.location.href = '../FichierHTML/connexion.html'; 
+    </script>";
+    exit;
+}
+
+
+//Vérifier le nombre de tentative de connexion
+
+if ($validation->estBloque($dbConnection, $email, $ip)) {
+     echo "<script>
+        alert('Trop de tentatives de connexion. Veuillez réessayer dans 15 minutes.');
+        window.location.href = '../FichierHTML/connexion.html';
+     </script>";
+     exit();
+}
+
+
 
 $security = new Security();
-
-
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Récupérer les données du formulaire
     $email = $_POST['email'];
     $password = $_POST['password'];
-
-    /*try {
-        // Vérifier si l'utilisateur est un étudiant
-        $sqlEtudiant = "SELECT * FROM Etudiant WHERE Email = :email AND Password = :password";
-        $stmtEtudiant = $dbConnection->prepare($sqlEtudiant);
-        $stmtEtudiant->bindValue(':email', $email);
-        $stmtEtudiant->bindValue(':password', $password); // Hachage recommandé pour les mots de passe
-        $stmtEtudiant->execute();
-
-        if ($stmtEtudiant->rowCount() === 1) {
-            // Si l'utilisateur est un étudiant
-            $etudiant = $stmtEtudiant->fetch(PDO::FETCH_ASSOC);
-            $_SESSION['user_role'] = 'etudiant';
-            $_SESSION['user_email'] = $email;
-            $_SESSION['numeroDA'] = $etudiant['NumeroDA'];
-            $_SESSION['user_name'] = $etudiant['Nom'] . ' ' . $etudiant['Prenom'];
-            header("Location: ../FichierHTML/etudiant.php");
-            exit();
-        }
-
-        // Vérifier si l'utilisateur est un professeur
-        $sqlProfesseur = "SELECT * FROM Professeur WHERE Email = :email AND Password = :password";
-        $stmtProfesseur = $dbConnection->prepare($sqlProfesseur);
-        $stmtProfesseur->bindValue(':email', $email);
-        $stmtProfesseur->bindValue(':password', $password); 
-        
-        $stmtProfesseur->execute();
-
-        if ($stmtProfesseur->rowCount() === 1) {
-            // Si l'utilisateur est un enseignant
-            $professeur = $stmtProfesseur->fetch();
-            $_SESSION['user_role'] = 'enseignant';
-            $_SESSION['user_email'] = $email;
-            $_SESSION['enseignant_id'] = $professeur['ID'];
-            $_SESSION['is_coordonnateur'] = (bool) $professeur['Coordonnateur']; 
-            $_SESSION['user_name'] = $professeur['Nom'] . ' ' . $professeur['Prenom'];
-
-
-            header("Location: ../FichierHTML/enseignant.php");
-            exit();
-        }
-
-        // Si aucun résultat n'a été trouvé
-        $_SESSION['error_message'] = "Email ou mot de passe incorrect.";
-        header("Location: ../FichierHTML/connexion.html");
-        exit();
-    } catch (PDOException $e) {
-        // Gérer les erreurs
-        echo "Erreur lors de la vérification des identifiants : " . $e->getMessage();
-    }*/
-
 
     try {
         
@@ -74,6 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($stmt->rowCount() === 1) {
             $utilisateur = $stmt->fetch(PDO::FETCH_ASSOC);
+            
 
             // Étape 2 : Vérifier le mot de passe avec Security::verifierMotDePasse()
             if ($security->verifyPassword($password, $utilisateur['Password'])) {
@@ -93,21 +88,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_name'] = $utilisateur['Nom'] . ' ' . $utilisateur['Prenom'];
                 $_SESSION['user_roles'] = $roles;
 
+                //Initialiser les pages accessibles
+                $pagesParRole = require_once '../lib/Role.php';
+
+                $pagesUtilisateur = [];
+                foreach ($_SESSION['user_roles'] as $role) {
+                    if (isset($pagesParRole[$role])) {
+                        $pagesUtilisateur = array_merge($pagesUtilisateur, $pagesParRole[$role]);
+                    }
+                }
+                $pagesUtilisateur = array_unique($pagesUtilisateur, SORT_REGULAR);
+                $_SESSION['pages_utilisateur'] = $pagesUtilisateur;
+
+                // si c'est un etudiant
+                // Étape 3 : si l'utilisateur est un étudiant, récupérer son NumeroDA
+                if (in_array('Étudiant', $_SESSION['user_roles'])) {
+                    $stmtEtudiant = $dbConnection->prepare("SELECT NumeroDA FROM Etudiant WHERE ID = :id");
+                    $stmtEtudiant->bindValue(':id', $utilisateur['ID']);
+                    $stmtEtudiant->execute();
+                    $etudiant = $stmtEtudiant->fetch(PDO::FETCH_ASSOC);
+
+                    if ($etudiant) {
+                        $_SESSION['numeroDA'] = $etudiant['NumeroDA'];
+                    }
+                }
+
+                //supprimer les tentative echoué
+                $validation->reinitialiserTentatives();
+
+
                 // Étape 5 : Rediriger selon le rôle (exemple)
-                if (in_array('Étudiant', $roles)) {
-                    header("Location: ../FichierHTML/etudiant.php");
-                } elseif (in_array('Professeur', $roles)) {
-                    header("Location: ../FichierHTML/enseignant.php");
-                } elseif (in_array('Coordonateur', $roles)) {
-                    $_SESSION['is_coordonnateur'] == true;
-                }
-                else {
-                    header("Location: ../FichierHTML/accueil.php");
-                }
-                
+                header("Location: ../FichierHTML/acceuil.php");
+        
                 exit();
             } else {
                 $_SESSION['error_message'] = "Mot de passe incorrect.";
+
+                // Enregistrer la tentative échouée
+                $validation->enregistrerTentative($dbConnection, $email, $ip) ;
+
+                $_SESSION['error_message'] = "Mot de passe incorrect.";
+                header("Location: ../FichierHTML/connexion.html");
+                exit();
+
             }
         } else {
             $_SESSION['error_message'] = "Aucun utilisateur trouvé avec cet email.";

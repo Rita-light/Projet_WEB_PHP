@@ -1,14 +1,14 @@
 <?php
-    require_once '../FichierPHP/verifierConnexionEnseignant.php'; 
+    require_once '../FichierPHP/verifierConnexion.php'; 
     require_once '../config/db.php'; 
     require_once '../Classes/Professeur.php'; 
 
 
-if (!isset($_SESSION['enseignant_id'])) {
+if (!isset($_SESSION['user_id'])) {
     die('Erreur : ID enseignant non défini. Veuillez vous reconnecter.');
 }
 
-$idEnseignant = $_SESSION['enseignant_id'];
+$idEnseignant = $_SESSION['user_id'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Récupère les données du formulaire
@@ -16,11 +16,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $prenom = $_POST['prenom'];
     $email = $_POST['email'];
     $dateNaissance = $_POST['dateNaissance'];
+    $dateEmbauche ;
+    $idDepart ;
 
     try {
 
         // Met à jour les informations de l'enseignant
-        Professeur::update($dbConnection, $idEnseignant, $nom, $prenom, $dateNaissance, $email);
+        Professeur::updateProf($dbConnection, $idEnseignant, $nom, $prenom, $dateNaissance, $email);
 
         $_SESSION['success_message'] = "Profil mis à jour avec succès.";
         header("Location: ../FichierHTML/enseignatProfile.php");

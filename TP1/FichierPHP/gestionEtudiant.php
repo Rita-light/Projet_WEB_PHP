@@ -4,27 +4,28 @@ require_once '../config/db.php'; // Connexion à la base
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $operation = $_POST['operation']; 
+    $operation = $_POST['operation'] ?? null; // Vérification avec valeur par défaut
+
     if ($operation === 'modifier') {
-        if (isset($_POST['numeroDA'])) {
+        if (isset($_POST['numeroDA'], $_POST['user_id'])) {
             $numeroDA = htmlspecialchars($_POST['numeroDA']);
+            $id = htmlspecialchars($_POST['user_id']); // Récupération de l'ID utilisateur
+
+            modifierEtudiant($dbConnection, $id, $numeroDA);
         } else {
-            die("Erreur : Numéro DA non défini.");
+            die("Erreur : Paramètres `user_id` ou `numeroDA` manquants.");
         }
-    
-        modifierEtudiant($dbConnection, $numeroDA);
-    }
-    else{
+    } else {
         inscrireEtudiant($dbConnection);
     }
 }
 
 // Vérifier si une action de suppression est demandée
-if (isset($_GET['action']) && $_GET['action'] === 'supprimer' && isset($_GET['numeroDA'])) {
-    $numeroDA = htmlspecialchars($_GET['numeroDA']); // Sécuriser les données
+if (isset($_GET['action']) && $_GET['action'] === 'supprimer' && isset($_GET['user_id'])) {
+    $id = htmlspecialchars($_GET['user_id']); // Sécuriser les données
 
     // Appeler la fonction pour supprimer l'étudiant
-    if (Etudiant::deleteByNumeroDA($dbConnection, $numeroDA)) {
+    if (Etudiant::deleteById($dbConnection, $id)) {
         // Message de confirmation
         echo "<script>
                 alert('L\\'étudiant a été supprimé avec succès.');
@@ -63,7 +64,7 @@ function inscrireEtudiant($dbConnection) {
 
         try {
             // Création de l'étudiant
-            $etudiant = new Etudiant(null, $nom, $prenom, $dateNaissance, $email, null, $dateInscription, $password, null);
+            $etudiant = new Etudiant(null, $nom, $prenom, $dateNaissance, $email, $password, null, $dateInscription,  null);
             $numeroDA = $etudiant->create($dbConnection, $avatarFile);
 
             echo "<p style='color:green;'>Étudiant inscrit avec succès. Numéro DA : <strong>$numeroDA</strong></p>";
@@ -80,6 +81,7 @@ function afficherEtudiants($dbConnection) {
     $etudiants = Etudiant::readAll($dbConnection); // Récupérer tous les étudiants
 
     foreach ($etudiants as $etudiant) {
+        $id = htmlspecialchars($etudiant['ID']);
         $numeroDA = htmlspecialchars($etudiant['NumeroDA']);
         $nom = htmlspecialchars($etudiant['Nom']);
         $prenom = htmlspecialchars($etudiant['Prenom']);
@@ -103,8 +105,8 @@ function afficherEtudiants($dbConnection) {
                 <td>$email</td>
                 <td>$dateInscription</td>
                 <td class='button-container'>
-                    <a href='../FichierHTML/gestModifierEtudiant.php?numeroDA=$numeroDA' class='button'>Modifier</a>
-                    <a href='../FichierPHP/gestionEtudiant.php?action=supprimer&numeroDA=$numeroDA' class='button' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer cet étudiant ?\")'>Supprimer</a>
+                    <a href='../FichierHTML/gestModifierEtudiant.php?user_id=$id&numeroDA=$numeroDA' class='button'>Modifier</a>
+                    <a href='../FichierPHP/gestionEtudiant.php?action=supprimer&user_id=$id' class='button' onclick='return confirm(\"Êtes-vous sûr de vouloir supprimer cet étudiant ?\")'>Supprimer</a>
                 </td>
               </tr>";
     }
@@ -112,22 +114,22 @@ function afficherEtudiants($dbConnection) {
 }
 
 
-function modifierEtudiant($dbConnection, $numeroDA){
+function modifierEtudiant($dbConnection, $id, $numeroDA){
     
     // Vérifier si une requête POST est reçue
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
 
         // Récupérer les données du formulaire
-        $nom = $_POST['nom'];
-        $prenom = $_POST['prenom'];
-        $email = $_POST['email'];
-        $dateNaissance = $_POST['dateNaissance'];
+        $nom = htmlspecialchars($_POST['nom']);
+        $prenom = htmlspecialchars($_POST['prenom']);
+        $email = htmlspecialchars($_POST['email']);
+        $dateNaissance = htmlspecialchars($_POST['dateNaissance']);
         $avatarFile = $_FILES['avatar'];    
 
         
         try {
-            $result = Etudiant::updateByNumeroDA($dbConnection, $numeroDA, $nom, $prenom, $email, $dateNaissance, $avatarFile);
+            $result = Etudiant::updateById($dbConnection, $id, $nom, $prenom, $email, $dateNaissance,$numeroDA, $avatarFile);
 
             if ($result) {
                 echo "<script>

@@ -56,7 +56,7 @@ class GroupeProfesseur {
     }
 
 
-    public static function getAssociationsByDepartement($db, $departementId) {
+    /*public static function getAssociationsByDepartement($db, $departementId) {
         $query = "
             SELECT Groupe.Nom AS NomGroupe, 
                    CONCAT(Professeur.Nom, ' ', Professeur.Prenom) AS NomProfesseur
@@ -70,7 +70,26 @@ class GroupeProfesseur {
         $stmt->bindValue(':departementId', $departementId, PDO::PARAM_INT); // Ensure parameter type matches
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC); // Return the result as an associative array
-    }
+    }*/
+
+    public static function getAssociationsByDepartement($db, $departementId) {
+    $query = "
+        SELECT Groupe.Nom AS NomGroupe, 
+               CONCAT(Utilisateur.Nom, ' ', Utilisateur.Prenom) AS NomProfesseur
+        FROM Groupe_Professeur
+        JOIN Groupe ON Groupe_Professeur.ID_Groupe = Groupe.ID
+        JOIN Professeur ON Groupe_Professeur.ID_Professeur = Professeur.ID
+        JOIN Utilisateur ON Professeur.ID = Utilisateur.ID
+        JOIN Cours ON Groupe.ID_Cours = Cours.ID
+        WHERE Cours.ID_Departement = :departementId
+    ";
+    
+    $stmt = $db->prepare($query);
+    $stmt->bindValue(':departementId', $departementId, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 
 }
 ?>

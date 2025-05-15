@@ -1,5 +1,5 @@
 <?php
-require_once '../FichierPHP/verifierConnexionEnseignant.php'; 
+require_once '../FichierPHP/verifierConnexion.php'; 
 ?>
 
 <!DOCTYPE html>

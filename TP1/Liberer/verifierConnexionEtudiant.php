@@ -1,5 +1,5 @@
 <?php
-session_start(); // Démarrer la session
+ // Démarrer la session
 
 // Vérifier si l'utilisateur est connecté
 /*if (!isset($_SESSION['user_email']) || $_SESSION['user_roles'] !== 'Étudiant') {

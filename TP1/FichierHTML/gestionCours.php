@@ -1,5 +1,5 @@
 <?php
-require_once '../FichierPHP/verifierConnexionEnseignant.php'
+require_once '../FichierPHP/verifierConnexion.php'
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -17,7 +17,7 @@ require_once '../FichierPHP/verifierConnexionEnseignant.php'
   <main>
     <h1>Bienvenue, Coordonnateur</h1>
     <p>Sélectionnez une option pour gérer les associations dans votre département :</p>
-    <a href="enseignant.php">Acceuil</a>
+    <a href="acceuil.php">Acceuil</a>
     <a href="gestion_cours_enseignant.php">Gérer les Cours-Enseignants</a>
     <a href="gestion_groupe_professeur.php">Gérer les Groupes-Professeurs</a>
     <a href="gestion_groupe_etudiant.php">Gérer les Groupes-Étudiants</a>

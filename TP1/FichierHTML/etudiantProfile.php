@@ -1,5 +1,5 @@
 <?php
-require_once '../FichierPHP/verifierConnexionEtudiant.php'; // Vérification session active
+require_once '../FichierPHP/verifierConnexion.php'; // Vérification session active
 require_once '../FichierPHP/recupererProfilEtudiant.php'; // Inclure le fichier de récupération
 
 // Assurez-vous que $etudiant est défini via recuperer_profil_etudiant.php
@@ -23,7 +23,7 @@ if (!isset($etudiant) || !$etudiant) {
 
 <div class="sidebar">
     <nav>
-        <a href="etudiant.php">Accueil</a>
+        <a href="acceuil.php">Accueil</a>
         <a href="etudiantCours.php">Mes cours</a>
         <a href="../FichierPHP/logout.php">Déconnexion</a>
     </nav>
@@ -45,8 +45,9 @@ if (!isset($etudiant) || !$etudiant) {
         <input type="date" name="dateNaissance" value="<?php echo htmlspecialchars($etudiant['DateNaissance']); ?>" required><br>
 
         <label>Avatar actuel :</label><br>
-        <img src="<?php echo htmlspecialchars($etudiant['Avatar']); ?>" alt="Avatar de l'étudiant" width="100"><br>
-        
+        <img src="<?php echo htmlspecialchars($etudiant['Avatar']?? '', ENT_QUOTES) ; ?>" alt="Avatar de l'étudiant" width="100"><br>
+       
+
         <label>Avatar :</label>
         <input type="file" name="avatar"><br>
         

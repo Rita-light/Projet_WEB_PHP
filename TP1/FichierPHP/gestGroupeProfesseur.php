@@ -1,16 +1,16 @@
 <?php
-require_once '../FichierPHP/verifierConnexionEnseignant.php'; // Vérifie la session active
+require_once '../FichierPHP/verifierConnexion.php'; // Vérifie la session active
 require_once '../config/db.php'; 
 require_once '../Classes/Professeur.php';
 require_once '../Classes/Groupe.php';
 require_once '../Classes/GroupeProfesseur.php';
 
 // Vérifiez si l'enseignant est connecté
-if (!isset($_SESSION['enseignant_id'])) {
+if (!isset($_SESSION['user_id'])) {
     die("Erreur : ID enseignant non défini. Veuillez vous reconnecter.");
 }
 
-$idEnseignant = $_SESSION['enseignant_id']; // ID de l'enseignant connecté
+$idEnseignant = $_SESSION['user_id']; // ID de l'enseignant connecté
 $departementId = null; // ID du département
 
 try {
