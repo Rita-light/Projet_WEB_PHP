@@ -1,16 +1,16 @@
 <?php
-require_once 'Individu.php';
+require_once 'Utilisateur.php';
 
-class Professeur extends Individu {
+class Professeur extends Utilisateur {
     private $dateEmbauche;
-    private $password;
-    private $coordonnateur;
+    private $idDepartement;
+    private $isCoordonnateur;
 
-    public function __construct($id, $nom, $prenom, $dateNaissance, $email, $dateEmbauche, $password, $coordonnateur = false) {
-        parent::__construct($id, $nom, $prenom, $dateNaissance, $email);
+    public function __construct($id, $nom, $prenom, $dateNaissance, $email, $password, $dateEmbauche, $idDepartement = null, $isCoordonnateur = false) {
+        parent::__construct($id, $nom, $prenom, $dateNaissance, $email, $password);
         $this->dateEmbauche = $dateEmbauche;
-        $this->password = $password;
-        $this->coordonnateur = $coordonnateur;
+        $this->idDepartement = $idDepartement;
+        $this->isCoordonnateur = $isCoordonnateur;
     }
 
     public function getType() {
@@ -18,68 +18,77 @@ class Professeur extends Individu {
     }
 
     public function create($dbConnection) {
-        $query = "INSERT INTO Professeur (Nom, Prenom, DateNaissance, Email, DateEmbauche, Password, Coordonnateur) 
-                  VALUES (:nom, :prenom, :dateNaissance, :email, :dateEmbauche, :password, :coordonnateur)";
+         // Étape 1 : insérer dans Utilisateur
+        $this->id = parent::create($dbConnection);
+
+        // Étape 2 : insérer dans Professeur
+        $query = "INSERT INTO Professeur (ID, DateEmbauche, ID_Departement) VALUES (:id, :dateEmbauche, :idDepartement)";
         $stmt = $dbConnection->prepare($query);
         $stmt->execute([
-            ':nom' => $this->nom,
-            ':prenom' => $this->prenom,
-            ':dateNaissance' => $this->dateNaissance,
-            ':email' => $this->email,
+            ':id' => $this->id,
             ':dateEmbauche' => $this->dateEmbauche,
-            ':password' => $this->password,
-            ':coordonnateur' => $this->coordonnateur,
+            ':idDepartement' => $this->idDepartement
         ]);
+
+         // Étape 3 : ajouter rôle Professeur
+        $this->ajouterRole($dbConnection, 'Professeur');
+
+        // Étape 4 : ajouter rôle Coordonnateur si applicable
+        if ($this->isCoordonnateur) {
+            $this->ajouterRole($dbConnection, 'Coordonnateur');
+        }
     }
 
     public static function readAll($dbConnection) {
-        $query = "SELECT * FROM Professeur";
+        $query = "
+            SELECT 
+                u.ID, u.Nom, u.Prenom, u.DateNaissance, u.Email,
+                p.DateEmbauche, p.Coordonnateur, d.Nom AS Departement
+            FROM Professeur p
+            INNER JOIN Utilisateur u ON p.ID = u.ID
+            LEFT JOIN Departement d ON p.ID_Departement = d.ID
+        ";
         $stmt = $dbConnection->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+
     public static function readByID($dbConnection, $id) {
         $query = "
             SELECT 
-                Professeur.ID, Professeur.Nom, Professeur.Prenom, Professeur.DateNaissance, 
-                Professeur.Email, Professeur.DateEmbauche, Professeur.Coordonnateur, 
-                Departement.Nom AS Departement
-            FROM Professeur
-            LEFT JOIN Departement ON Professeur.ID_Departement = Departement.ID
-            WHERE Professeur.ID = :id
+                u.ID, u.Nom, u.Prenom, u.DateNaissance, u.Email,
+                p.DateEmbauche, p.Coordonnateur,
+                d.Nom AS Departement
+            FROM Professeur p
+            INNER JOIN Utilisateur u ON p.ID = u.ID
+            LEFT JOIN Departement d ON p.ID_Departement = d.ID
+            WHERE p.ID = :id
         ";
         $stmt = $dbConnection->prepare($query);
-        $stmt->bindValue(':id', $id);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC); // Retourne les données sous forme de tableau associatif
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public static function getIdDepartement($dbConnection, $idEnseignant){
-        $queryDept = "
-            SELECT ID_Departement 
-            FROM Professeur
-                WHERE ID = :idEnseignant;
-        ";
-        $stmtDept = $dbConnection->prepare($queryDept);
-        $stmtDept->bindValue(':idEnseignant', $idEnseignant);
-        $stmtDept->execute();
-        $departementId = $stmtDept->fetchColumn();
 
-        return $departementId;
+    public static function getIdDepartement($dbConnection, $idProfesseur) {
+        $query = "SELECT ID_Departement FROM Professeur WHERE ID = :id";
+        $stmt = $dbConnection->prepare($query);
+        $stmt->bindValue(':id', $idProfesseur, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchColumn();
     }
 
-    public static function update($dbConnection, $id, $nom, $prenom, $dateNaissance, $email) {
-        $query = "
-            UPDATE Professeur
-            SET 
-                Nom = :nom,
-                Prenom = :prenom,
-                DateNaissance = :dateNaissance,
-                Email = :email
+
+    public  function updateProf($dbConnection, $id, $nom, $prenom, $dateNaissance, $email, $dateEmbauche, $idDepartement) {
+        // Mise à jour dans Utilisateur
+        $queryUtilisateur = "
+            UPDATE Utilisateur
+            SET Nom = :nom, Prenom = :prenom, DateNaissance = :dateNaissance, Email = :email
             WHERE ID = :id
         ";
-        $stmt = $dbConnection->prepare($query);
+        $stmt = $dbConnection->prepare($queryUtilisateur);
         $stmt->execute([
             ':id' => $id,
             ':nom' => $nom,
@@ -87,36 +96,36 @@ class Professeur extends Individu {
             ':dateNaissance' => $dateNaissance,
             ':email' => $email
         ]);
+
+        // Mise à jour dans Professeur
+        $queryProf = "
+            UPDATE Professeur
+            SET DateEmbauche = :dateEmbauche, Coordonnateur = :coordonnateur, ID_Departement = :idDepartement
+            WHERE ID = :id
+        ";
+        $stmt = $dbConnection->prepare($queryProf);
+        $stmt->execute([
+            ':id' => $id,
+            ':dateEmbauche' => $dateEmbauche,
+            ':coordonnateur' => $coordonnateur,
+            ':idDepartement' => $idDepartement
+        ]);
     }
+
 
 
     public static function getProfByDepartement($dbConnection, $departementId) {
-        $queryEnseignants = "
-            SELECT ID, Nom, Prenom 
-            FROM Professeur 
-            WHERE ID_Departement = :departementId
+        $query = "
+            SELECT u.ID, u.Nom, u.Prenom
+            FROM Professeur p
+            INNER JOIN Utilisateur u ON p.ID = u.ID
+            WHERE p.ID_Departement = :departementId
         ";
-        $stmtEnseignants = $dbConnection->prepare($queryEnseignants);
-        $stmtEnseignants->bindValue(':departementId', $departementId);
-        $stmtEnseignants->execute();
-        $enseignantsOptions = $stmtEnseignants->fetchAll(PDO::FETCH_ASSOC);
-
-        return $enseignantsOptions;
+        $stmt = $dbConnection->prepare($query);
+        $stmt->bindValue(':departementId', $departementId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

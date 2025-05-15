@@ -1,6 +1,6 @@
 <?php
 $host = 'tp1-db-1';
-$dbname = 'Universite';
+$dbname = 'Universite2';
 $user = 'root';
 $pass = 'root';
 

@@ -1,19 +1,18 @@
 <?php
-require_once 'Individu.php';
+require_once 'Utilisateur.php';
 
-class Etudiant extends Individu {
+class Etudiant extends Utilisateur {
     private $numeroDA;
     private $dateInscription;
-    private $password;
     private $avatar;
 
-    public function __construct($id, $nom, $prenom, $dateNaissance, $email, $numeroDA, $dateInscription, $password, $avatar) {
-        parent::__construct($id, $nom, $prenom, $dateNaissance, $email);
+    public function __construct($id, $nom, $prenom, $dateNaissance, $email, $password, $numeroDA = null , $dateInscription = null,  $avatar = null) {
+        parent::__construct($id, $nom, $prenom, $dateNaissance, $email, $password);
         $this->numeroDA = $numeroDA;
         $this->dateInscription = $dateInscription;
-        $this->password = $password;
         $this->avatar = $avatar;
     }
+
 
     public function getType() {
         return 'Etudiant';
@@ -23,33 +22,24 @@ class Etudiant extends Individu {
      * Methode qui permet de creer et d'ajouter un nouvel étudiant dans la bd
      */
     public function create($dbConnection, $avatarFile = NULL) {
+
+        // Étape 1 : insérer dans Utilisateur, recuper ID et créer DA
+        $this->id = parent::create($dbConnection);
+        $this->numeroDA = 'DA' . str_pad($this->id, 3, '0', STR_PAD_LEFT);
+
         // Étape 1 : insérer sans NumeroDA
-        $query = "INSERT INTO Etudiant (Nom, Prenom, DateNaissance, Email, DateInscription, Password) 
-                  VALUES (:nom, :prenom, :dateNaissance, :email, :dateInscription, :password)";
+        $query = "INSERT INTO Etudiant ( ID, DateInscription, NumeroDA ) 
+                  VALUES ( :id, :dateInscription, :numeroDA )";
         $stmt = $dbConnection->prepare($query);
         $stmt->execute([
-            ':nom' => $this->nom,
-            ':prenom' => $this->prenom,
-            ':dateNaissance' => $this->dateNaissance,
-            ':email' => $this->email,
+            ':id' => $this->id,
             ':dateInscription' => $this->dateInscription,
-            ':password' => $this->password,
-        ]);
-    
-        // Étape 2 : récupérer l'ID généré
-        $id = $dbConnection->lastInsertId();
-        $this->id = $id;
-        $this->numeroDA = 'DA' . str_pad($id, 3, '0', STR_PAD_LEFT);
-    
-        // Étape 3 : mettre à jour le champ NumeroDA
-        $updateQuery = "UPDATE Etudiant SET NumeroDA = :numeroDA WHERE ID = :id";
-        $stmt = $dbConnection->prepare($updateQuery);
-        $stmt->execute([
             ':numeroDA' => $this->numeroDA,
-            ':id' => $id,
         ]);
     
-        // Étape 4 : gérer l’avatar
+    
+    
+        // Étape 2 : gérer l’avatar
         if ($avatarFile && $avatarFile['tmp_name']) {
             // La fonction uploadAvatar retourne le chemin du fichier avatar
             $avatarPath = $this->uploadAvatar($avatarFile);
@@ -59,74 +49,90 @@ class Etudiant extends Individu {
             $stmtAvatar = $dbConnection->prepare($updateAvatarQuery);
             $stmtAvatar->execute([
                 ':avatarPath' => $avatarPath,
-                ':id' => $id,
+                ':id' => $this->id,
             ]);
         }
 
+        // Étape 3 : ajouter le rôle Étudiant
+        $this->ajouterRole($dbConnection, 'Etudiant');
     
         return $this->numeroDA; // Retourne le DA généré
     }
     
 
     public static function readAll($dbConnection) {
-        $query = "SELECT * FROM Etudiant";
+        $query = "
+            SELECT 
+                u.ID, e.NumeroDA, u.Nom, u.Prenom, u.Email, u.DateNaissance, 
+                 e.DateInsription
+            FROM Etudiant e
+            INNER JOIN Utilisateur u ON e.ID = u.ID
+        ";
         $stmt = $dbConnection->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+    }   
 
 
-    public static function readByNumeroDA($dbConnection, $numeroDA) {
-        $query = "SELECT Nom, Prenom, DateNaissance, Email, Avatar FROM Etudiant WHERE NumeroDA = :numeroDA";
+    public static function readById($dbConnection, $id) {
+        $query = "
+            SELECT u.Nom, u.Prenom, u.DateNaissance, u.Email, e.Avatar, e.NumeroDA
+            FROM Utilisateur u
+            INNER JOIN Etudiant e ON u.ID = e.ID
+            WHERE u.ID = :id
+        ";
         $stmt = $dbConnection->prepare($query);
-        $stmt->bindValue(':numeroDA', $numeroDA);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC); // Retourne un tableau associatif avec les données
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
 
+    public static function updateById($dbConnection, $id, $nom, $prenom, $email, $dateNaissance, $avatarFile = null) {
+        // Met à jour l'avatar si fourni
+        if ($avatarFile && $avatarFile['error'] === UPLOAD_ERR_OK) {
+            $etudiant = new Etudiant($id, $nom, $prenom, $dateNaissance, $email, null, null, null);
+            $avatarPath = $etudiant->uploadAvatar($avatarFile);
 
-    public static function updateByNumeroDA($dbConnection, $numeroDA, $nom, $prenom, $email, $dateNaissance, $avatarFile = null) {
-        if ($avatarFile && $avatarFile['error'] === UPLOAD_ERR_OK) 
-        { 
-            $etudiant = new Etudiant(null, null, null, null,null, $numeroDA, null, null, null); // Instanciez l'objet Étudiant pour accéder à la méthode d'upload 
-            $avatarPath = $etudiant->uploadAvatar($avatarFile); 
-            $query = "UPDATE Etudiant SET Avatar = :avatar WHERE NumeroDA = :numeroDA";
+            $query = "UPDATE Etudiant SET Avatar = :avatar WHERE ID = :id";
             $stmt = $dbConnection->prepare($query);
             $stmt->bindValue(':avatar', $avatarPath);
-            $stmt->bindValue(':numeroDA', $numeroDA);
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
         }
-        
+
+        // Mise à jour des données dans la table Utilisateur
         $query = "
-            UPDATE Etudiant
-            SET Nom = :nom, Prenom = :prenom, DateNaissance = :dateNaissance, Email =:email
-            WHERE NumeroDA = :numeroDA
+            UPDATE Utilisateur
+            SET Nom = :nom, Prenom = :prenom, Email = :email, DateNaissance = :dateNaissance
+            WHERE ID = :id
         ";
         $stmt = $dbConnection->prepare($query);
         $stmt->bindValue(':nom', $nom);
         $stmt->bindValue(':prenom', $prenom);
         $stmt->bindValue(':email', $email);
         $stmt->bindValue(':dateNaissance', $dateNaissance);
-        $stmt->bindValue(':numeroDA', $numeroDA);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         return $stmt->execute();
-    
     }
 
-    // Supprimer un étudiant
-    public static function deleteByNumeroDA($dbConnection, $numeroDA) {
-        $query = "DELETE FROM Etudiant WHERE NumeroDA = :numeroDA";
+    public static function deleteById($dbConnection, $id) {
+        // Récupération du chemin de l'avatar avant suppression
+        $query = "SELECT Avatar FROM Etudiant WHERE ID = :id";
         $stmt = $dbConnection->prepare($query);
-        $stmt->bindValue(':numeroDA', $numeroDA);
-        $isExecute = $stmt->execute();
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Supprimer également l'avatar (fichier image)
-        $avatarPath = 'avatars/DA' . $numeroDA . '.jpg';
-        if (file_exists($avatarPath)) {
-            unlink($avatarPath);  // Supprimer l'image de l'avatar
+        if ($result && !empty($result['Avatar']) && file_exists($result['Avatar'])) {
+            unlink($result['Avatar']);
         }
 
-        return $isExecute;
+        // Suppression de l'utilisateur (cascade supprimera aussi l'étudiant et les rôles)
+        $query = "DELETE FROM Utilisateur WHERE ID = :id";
+        $stmt = $dbConnection->prepare($query);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        return $stmt->execute();
     }
 
 

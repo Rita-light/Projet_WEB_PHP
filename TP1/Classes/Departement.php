@@ -1,11 +1,11 @@
 <?php
 class Departement {
-    private $id;
+    private ?int $id;
     private $code;
     private $nom;
     private $description;
 
-    public function __construct($id = null, $code = null, $nom = null, $description = null) {
+    public function __construct(?int $id = null, $code = null, $nom = null, $description = null) {
         $this->id = $id;
         $this->code = $code;
         $this->nom = $nom;
@@ -20,6 +20,7 @@ class Departement {
             ':nom' => $this->nom,
             ':description' => $this->description,
         ]);
+        $this->id = (int) $dbConnection->lastInsertId();
     }
 
     public static function readAll($dbConnection) {
@@ -44,6 +45,10 @@ class Departement {
         $query = "DELETE FROM Departement WHERE ID = :id";
         $stmt = $dbConnection->prepare($query);
         $stmt->execute([':id' => $id]);
+    }
+
+    public function getId(): ?int {
+        return $this->Id;
     }
 }
 ?>

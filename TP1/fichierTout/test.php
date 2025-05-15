@@ -3,98 +3,163 @@ require_once '../config/db.php';
 require_once '../Classes/Etudiant.php';
 
 
-// Inclure la configuration et les classes
+
+require_once '../config/db.php';
 require_once '../Classes/Departement.php';
-require_once '../Classes/Etudiant.php';
 require_once '../Classes/Professeur.php';
+require_once '../Classes/Etudiant.php';
 require_once '../Classes/Cours.php';
 require_once '../Classes/Groupe.php';
 require_once '../Classes/GroupeProfesseur.php';
 require_once '../Classes/GroupeEtudiant.php';
 require_once '../Classes/CoursEnseignant.php';
 require_once '../Classes/CoursEtudiant.php';
-
+require_once '../Classes/Role.php';
 
 try {
-    // Test : Ajouter un département
-    echo "Création d'un département...\n";
-    $departement = new Departement(null, 'Lecture', 'Informatique', 'Département des technologies de l\'information');
-    $departement->create($dbConnection);
-    echo "Département créé avec succès.\n";
+    echo "=== GÉNÉRATION DE DONNÉES DE TEST UNIVERSITAIRES ===\n\n";
 
-    // Test : Lire tous les départements
-    echo "Lecture de tous les départements...\n";
-    $departements = Departement::readAll($dbConnection);
+    // ===== ROLES =====
+    /*$roles = [
+        new Role(null, 'Professeur'),
+        new Role(null, 'Étudiant'),
+        new Role(null, 'Coordonnateur')
+    ];
+
+    foreach ($roles as $role) {
+        $role->create($dbConnection);
+        
+    }
+
+    // ===== DÉPARTEMENTS =====
+    $departements = [
+        new Departement(null, 'INFO', 'Informatique', 'Département d’informatique'),
+        new Departement(null, 'GEN', 'Génie', 'Département de génie'),
+    ];
     foreach ($departements as $dept) {
-        echo "ID: " . $dept['ID'] . ", Code: " . $dept['Code'] . ", Nom: " . $dept['Nom'] . "\n";
+        $dept->create($dbConnection);
+        
     }
 
-    // Test : Ajouter un étudiant
-    echo "Création d'un étudiant...\n";
-    $etudiant = new Etudiant(null, 'Mogui', 'Jean', '2000-01-01', 'jean.mogui@example.com', '2025H001', '2025-01-01', 'securepassword');
-    $etudiant->create($dbConnection);
-    echo "Étudiant ajouté avec succès.\n";
+    foreach ($departements as $dept) {
+        $dept->create($dbConnection);
+    }*/
 
-    // Test : Lire tous les étudiants
-    echo "Lecture de tous les étudiants...\n";
-    $etudiants = Etudiant::readAll($dbConnection);
-    foreach ($etudiants as $etu) {
-        echo "ID: " . $etu['ID'] . ", Nom: " . $etu['Nom'] . ", Prénom: " . $etu['Prenom'] . ", Email: " . $etu['Email'] . "\n";
-    }
-
-    // Test : Ajouter un professeur
-    echo "Création d'un professeur...\n";
-    $professeur = new Professeur(null, 'Martin', 'Claire', '1980-05-15', 'claire.martin@example.com', '2020-09-01', 'securepassword', true);
-    $professeur->create($dbConnection);
-    echo "Professeur ajouté avec succès.\n";
-
-    // Test : Lire tous les professeurs
-    echo "Lecture de tous les professeurs...\n";
-    $professeurs = Professeur::readAll($dbConnection);
+    // ===== PROFESSEURS =====
+    $professeurs = [
+        new Professeur(null, 'Durand', 'Claire', '1970-06-01', 'claire.durand@example.com','mdp1',  '2000-08-11',1, true),
+        new Professeur(null, 'Martin', 'Jean', '1982-09-10', 'jean.martin@example.com', 'mdp2','2012-01-03',1,  false),
+        new Professeur(null, 'Lavoie', 'Marc', '1978-04-25', 'marc.lavoie@example.com', 'mdp3','2010-02-10', 2, false),
+    ];
     foreach ($professeurs as $prof) {
-        echo "ID: " . $prof['ID'] . ", Nom: " . $prof['Nom'] . ", Prénom: " . $prof['Prenom'] . ", Email: " . $prof['Email'] . "\n";
+        $prof->create($dbConnection);
     }
 
-    // Test : Ajouter un cours
-    echo "Création d'un cours...\n";
-    $cours = new Cours(null, 'INFO101', 'Introduction à l\'informatique', 'Cours de base pour les étudiants en informatique', 1);
-    $cours->create($dbConnection);
-    echo "Cours ajouté avec succès.\n";
 
-    // Test : Lire tous les cours
-    echo "Lecture de tous les cours...\n";
-    $coursList = Cours::readAll($dbConnection);
-    foreach ($coursList as $course) {
-        echo "ID: " . $course['ID'] . ", Nom: " . $course['Nom'] . ", Département: " . $course['ID_Departement'] . "\n";
+    // ===== ÉTUDIANTS =====
+    $etudiants = [
+        new Etudiant(null, 'Benoit', 'Sarah', '2003-03-12', 'sarah.benoit@example.com', 'passetu1', null, '2024-01-15' ),
+        new Etudiant(null, 'Roy', 'Alexandre', '2002-11-23', 'alexandre.roy@example.com','passetu2', null, '2024-01-15'  ),
+        new Etudiant(null, 'Lambert', 'Chloé', '2001-07-05', 'chloe.lambert@example.com', 'passetu3', null, '2024-01-15' ),
+    ];
+    foreach ($etudiants as $etu) {
+        $etu->create($dbConnection);
+        
     }
 
-    // Test : Assigner un étudiant à un cours
-    echo "Assignation d'un étudiant à un cours...\n";
-    $coursEtudiant = new CoursEtudiant(1, 60); // ID_Cours = 1, ID_Etudiant = 60
-    $coursEtudiant->assign($dbConnection);
-    echo "Étudiant assigné au cours avec succès.\n";
-
-    // Test : Lire les étudiants d'un cours
-    echo "Lecture des étudiants inscrits à un cours...\n";
-    $etudiantsCours = CoursEtudiant::readByCours($dbConnection, 1); // ID_Cours = 1
-    foreach ($etudiantsCours as $etuCours) {
-        echo "Nom: " . $etuCours['Nom'] . ", Prénom: " . $etuCours['Prenom'] . "\n";
+    // ===== COURS =====
+    $cours = [
+        new Cours(null, 'INF101', 'Algorithmique', 'Cours d’introduction à l’algorithmique', 1),
+        new Cours(null, 'GEN200', 'Thermodynamique', 'Thermodynamique de base', 2),
+    ];
+    foreach ($cours as $c) {
+        $c->create($dbConnection);
+        
     }
 
-    // Test : Assigner un professeur à un groupe
-    echo "Assignation d'un professeur à un groupe...\n";
-    $groupeProfesseur = new GroupeProfesseur(1, 1); // ID_Groupe = 1, ID_Professeur = 1
-    $groupeProfesseur->assign($dbConnection);
-    echo "Professeur assigné au groupe avec succès.\n";
-
-    // Test : Lire les groupes assignés à un professeur
-    echo "Lecture des groupes assignés à un professeur...\n";
-    $groupesProf = GroupeProfesseur::readByProfesseur($dbConnection, 1); // ID_Professeur = 1
-    foreach ($groupesProf as $groupe) {
-        echo "Nom du groupe: " . $groupe['Nom'] . "\n";
+    // ===== GROUPES =====
+    $groupes = [
+        new Groupe(null,'G1-INF101', 'Groupe INF101', 'Groupe principal des INFO',1),
+        new Groupe(null,'G2-GEN', 'Groupe GEN-B', 'Groupe principal du GEN', 2),
+    ];
+    foreach ($groupes as $g) {
+        $g->create($dbConnection);
+        
     }
+
+   /* // ===== LIENS COURS / PROFESSEUR =====
+    $CoursProf = [
+        new CoursEnseignant(4, 13),
+        new CoursEnseignant(5, 15),
+    ];
+    foreach ($CoursProf as $lcp) {
+        $lcp->assign($dbConnection, $CoursProf[0].getIdCours(), $CoursProf[1].getId());
+    }
+
+    // ===== LIENS COURS / ÉTUDIANTS =====
+    $liensCoursEtu = [
+        new CoursEtudiant($cours[0]->Id, $etudiants[0]->Id),
+        new CoursEtudiant($cours[0]->Id, $etudiants[1]->Id),
+        new CoursEtudiant($cours[1]->Id, $etudiants[2]->Id),
+    ];
+    foreach ($liensCoursEtu as $lce) {
+        $lce->assign($dbConnection);
+    }
+
+    // ===== LIENS GROUPES / PROFESSEURS =====
+    $liensGroupeProf = [
+        new GroupeProfesseur($groupes[0]->Id, $professeurs[1]->Id),
+        new GroupeProfesseur($groupes[1]->Id, $professeurs[2]->Id),
+    ];
+    foreach ($liensGroupeProf as $lgp) {
+        $lgp->assign($dbConnection);
+    }
+
+    // ===== LIENS GROUPES / ÉTUDIANTS =====
+    $liensGroupeEtu = [
+        new GroupeEtudiant($groupes[0]->Id, $etudiants[0]->Id),
+        new GroupeEtudiant($groupes[0]->Id, $etudiants[1]->Id),
+        new GroupeEtudiant($groupes[1]->Id, $etudiants[2]->Id),
+    ];
+    foreach ($liensGroupeEtu as $lge) {
+        $lge->assign($dbConnection);
+    }
+
+    echo "\n=== DONNÉES INSÉRÉES ✅ ===\n";
+
+    // ===== AFFICHAGE DE TEST =====
+
+    echo "\n--- Étudiants inscrits au cours 'INF101' ---\n";
+    foreach ($etudiants as $e) {
+        $stmt = $dbConnection->prepare("SELECT * FROM CoursEtudiant WHERE Cours_Id = ? AND Etudiant_Id = ?");
+        $stmt->execute([$cours[0]->Id, $e->Id]);
+        if ($stmt->rowCount() > 0) {
+            echo "- {$e->Prenom} {$e->Nom}\n";
+        }
+    }
+
+    echo "\n--- Cours enseignés par Professeur Claire Durand ---\n";
+    $stmt = $dbConnection->prepare("SELECT c.Titre FROM Cours c JOIN CoursEnseignant ce ON c.Id = ce.Cours_Id WHERE ce.Professeur_Id = ?");
+    $stmt->execute([$professeurs[0]->Id]);
+    $coursDurand = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($coursDurand as $c) {
+        echo "- {$c['Titre']}\n";
+    }
+
+    echo "\n--- Groupes de Chloé Lambert ---\n";
+    $stmt = $dbConnection->prepare("SELECT g.Nom FROM Groupe g JOIN GroupeEtudiant ge ON g.Id = ge.Groupe_Id WHERE ge.Etudiant_Id = ?");
+    $stmt->execute([$etudiants[2]->Id]);
+    $groupesChloe = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($groupesChloe as $g) {
+        echo "- {$g['Nom']}\n";
+    }
+
+    echo "\n--- Rôles enregistrés ---\n";
+    $stmt = $dbConnection->query("SELECT Nom FROM Role");
+    foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $r) {
+        echo "- {$r['Nom']}\n";
+    }*/
 
 } catch (Exception $e) {
     echo "Erreur : " . $e->getMessage();
 }
-?>

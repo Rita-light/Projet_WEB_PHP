@@ -1,5 +1,3 @@
-
-
 -- Table Département
 CREATE TABLE Departement (
     ID INT AUTO_INCREMENT PRIMARY KEY,
@@ -10,35 +8,55 @@ CREATE TABLE Departement (
     Description TEXT
 );
 
--- Table Étudiant
-CREATE TABLE Etudiant (
+-- Table Utilisateur (tous les utilisateurs : étudiant, enseignant, coordonnateur, administrateur)
+CREATE TABLE Utilisateur (
     ID INT AUTO_INCREMENT PRIMARY KEY,
-    NumeroDA VARCHAR(20) UNIQUE,
     Nom VARCHAR(50) NOT NULL,
     Prenom VARCHAR(50) NOT NULL,
     DateNaissance DATE NOT NULL,
     Email VARCHAR(100) UNIQUE NOT NULL,
-    Avatar VARCHAR(255),  -- Stocke le chemin de l'image
-    DateInscription DATE NOT NULL DEFAULT CURRENT_DATE,
+    Password VARCHAR(255) NOT NULL,  -- Hashé + salé
     DateCreation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    DateModification TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    Password VARCHAR(255) NOT NULL
+    DateModification TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Table Professeur
-CREATE TABLE Professeur (
+-- Table Rôle (liste des rôles possibles)
+CREATE TABLE Role (
     ID INT AUTO_INCREMENT PRIMARY KEY,
-    Nom VARCHAR(50) NOT NULL,
-    Prenom VARCHAR(50) NOT NULL,
-    DateNaissance DATE NOT NULL,
-    Email VARCHAR(100) UNIQUE NOT NULL,
+    Nom VARCHAR(50) UNIQUE NOT NULL
+);
+
+-- Table Utilisateur_Role (relation plusieurs rôles par utilisateur)
+CREATE TABLE Utilisateur_Role (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    ID_Utilisateur INT NOT NULL,
+    ID_Role INT NOT NULL,
+    UNIQUE (ID_Utilisateur, ID_Role),
+    FOREIGN KEY (ID_Utilisateur) REFERENCES Utilisateur(ID) ON DELETE CASCADE,
+    FOREIGN KEY (ID_Role) REFERENCES Role(ID) ON DELETE CASCADE
+);
+
+
+-- Table Professeur (lié à Utilisateur)
+CREATE TABLE Professeur (
+    ID INT PRIMARY KEY,  -- Correspond à Utilisateur(ID)
     DateEmbauche DATE NOT NULL,
-    Password VARCHAR(255) NOT NULL,
-    Coordonnateur BOOLEAN DEFAULT FALSE,
     ID_Departement INT,
     DateCreation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     DateModification TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (ID) REFERENCES Utilisateur(ID) ON DELETE CASCADE,
     FOREIGN KEY (ID_Departement) REFERENCES Departement(ID) ON DELETE SET NULL
+);
+
+-- Table Étudiant (lié à Utilisateur)
+CREATE TABLE Etudiant (
+    ID INT PRIMARY KEY,  -- Correspond à Utilisateur(ID)
+    NumeroDA VARCHAR(20) UNIQUE,
+    Avatar VARCHAR(255),
+    DateInscription DATE NOT NULL DEFAULT CURRENT_DATE,
+    DateCreation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    DateModification TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (ID) REFERENCES Utilisateur(ID) ON DELETE CASCADE
 );
 
 -- Table Cours

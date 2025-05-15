@@ -10,6 +10,14 @@ class CoursEnseignant {
         $this->idProfesseur = $idProfesseur;
     }
 
+    public function getIdCours() {
+        return $this->idCours;
+    }
+
+    public function getId() {
+        return $this->IdProfesseur;
+    }
+
     /**
      * Assigne un enseignant à un cours.
      *

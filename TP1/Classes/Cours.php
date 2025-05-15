@@ -23,6 +23,7 @@ class Cours {
             ':description' => $this->description,
             ':idDepartement' => $this->idDepartement,
         ]);
+        $this->id = $dbConnection->lastInsertId();
     }
 
     public static function readAll($dbConnection) {
@@ -62,6 +63,11 @@ class Cours {
         $coursOptions = $stmtCours->fetchAll(PDO::FETCH_ASSOC);
 
         return $coursOptions;
+    }
+    
+    public static function getAll($db) {
+        $sql = "SELECT * FROM Cours";
+        return $db->query($sql)->fetchAll();
     }
 }
 ?>

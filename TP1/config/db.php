@@ -2,7 +2,7 @@
     //$HOST       = 'host.docker.internal';
     $HOST       = 'tp1-db-1';
     $PORT       =  3306;
-    $DBNAME     = 'Universite';
+    $DBNAME     = 'Universite2';
     $USER       = 'root';
     $PASSWORD   = 'root';
 
