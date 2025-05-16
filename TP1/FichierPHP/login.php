@@ -3,14 +3,29 @@ require_once '../config/db.php';
 require_once '../lib/Security.php';
 require_once '../lib/Validation.php';
 
+// Sécurisation des cookies de session
+
+/*session_name("CookieSessionTpWeb");
+
+
+ini_set('session.cookie_samesite', 'Strict');
+//ini_set('session.use_trans_sid', 0);
+//ini_set('session.use_strict_mode', 1);*/
+session_set_cookie_params(0, '/', '', false, true);
+session_start();
+
+
+// Démarrage de la session
+//session_regenerate_id(true);
+
+
+
+
 /*--------------------------------------------------------------------------
 ------------------------------Validation des données de connexion--------------------------------
 ----------------------------------------------------------------------------*/
-   session_start();
 
 $validation = new Validation();
-
-
 
 //Nettoyage et validation de l'email
 
@@ -47,7 +62,6 @@ if ($validation->estBloque($dbConnection, $email, $ip)) {
      </script>";
      exit();
 }
-
 
 
 $security = new Security();
@@ -114,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 //supprimer les tentative echoué
-                $validation->reinitialiserTentatives();
+                $validation->reinitialiserTentatives($dbConnection, $email, $ip);
 
 
                 // Étape 5 : Rediriger selon le rôle (exemple)

@@ -88,12 +88,12 @@ class Validation {
 
 
     // Réinitialise les tentatives après une connexion réussie
-    public function reinitialiserTentatives() {
+    public function reinitialiserTentatives($db, $email, $ip) {
         $sql = "DELETE FROM TentativesConnexion WHERE Email = :email AND AdresseIP = :ip";
-        $stmt = $this->db->prepare($sql);
+        $stmt = $db->prepare($sql);
         $stmt->execute([
-            ':email' => $this->email,
-            ':ip' => $this->ip
+            ':email' => $email,
+            ':ip' => $ip
         ]);
     }
 
