@@ -79,6 +79,8 @@
 <main>
     <h2>Modifier vos informations</h2>
     <form method="POST" action="../FichierPHP/modifierProfilEnseignant.php">
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+    
         <label>Nom :</label>
         <input type="text" name="nom" value="<?php echo htmlspecialchars($enseignant['Nom']); ?>" required>
 

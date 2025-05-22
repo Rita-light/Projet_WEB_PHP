@@ -20,6 +20,12 @@ session_start();
 //session_regenerate_id(true);
 
 
+// ------------ Générer le jeton csrf de session -----------------------
+
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 
 
 /*--------------------------------------------------------------------------

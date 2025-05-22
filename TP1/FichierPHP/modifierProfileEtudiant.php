@@ -3,6 +3,12 @@ require_once '../config/db.php'; // Connexion à la base de données
 require_once '../Classes/Etudiant.php'; // Classe Etudiant
 require_once '../FichierPHP/verifierConnexion.php';
 
+
+if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    die("Erreur CSRF : token invalide.");
+}
+
+
 if (!isset($_SESSION['user_id'])) {
     header("Location: connexion.html");
     exit();
@@ -23,13 +29,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Utiliser la méthode de la classe Etudiant pour mettre à jour
         Etudiant::updateById($dbConnection, $id, $nom, $prenom, $email, $dateNaissance, $numDA, $avatarFile);
 
-        // Rediriger avec un message de succès
         $_SESSION['success_message'] = "Profil mis à jour avec succès.";
-        
+        header("Location: ../FichierHTML/etudiantProfile.php");
         exit();
     } catch (PDOException $e) {
         die("Erreur lors de la mise à jour : " . $e->getMessage());
-    }
+    }   
     
-        header("Location: ../FichierHTML/etudiantProfile.php");
 }

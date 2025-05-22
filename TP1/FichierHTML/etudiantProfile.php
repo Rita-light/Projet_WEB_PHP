@@ -32,6 +32,8 @@ if (!isset($etudiant) || !$etudiant) {
 <main>
     <h2>Modifier vos informations</h2>
     <form method="POST" action="../FichierPHP/modifierProfileEtudiant.php" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+    
         <label>Nom :</label>
         <input type="text" name="nom" value="<?php echo htmlspecialchars($etudiant['Nom']); ?>" required><br>
         

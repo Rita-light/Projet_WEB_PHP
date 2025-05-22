@@ -46,6 +46,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'supprimer' && isset($_GET['us
 
 function inscrireEtudiant($dbConnection) {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
         // Récupération des données
         $nom = $_POST['nom'];
         $prenom = $_POST['prenom'];
