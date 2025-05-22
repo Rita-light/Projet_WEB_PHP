@@ -100,7 +100,8 @@ CREATE TABLE Cours_Etudiant (
     ID_Cours INT NOT NULL,
     ID_Etudiant INT NOT NULL,
     FOREIGN KEY (ID_Cours) REFERENCES Cours(ID) ON DELETE CASCADE,
-    FOREIGN KEY (ID_Etudiant) REFERENCES Etudiant(ID) ON DELETE CASCADE
+    FOREIGN KEY (ID_Etudiant) REFERENCES Etudiant(ID) ON DELETE CASCADE,
+    CONSTRAINT unique_etudiant_par_groupe UNIQUE (ID_Etudiant, ID_Cours)
 );
 
 -- Table Cours_Enseignant (relation entre Cours et Professeur)
@@ -109,8 +110,8 @@ CREATE TABLE Cours_Enseignant (
     ID_Professeur INT NOT NULL,
     ID_Cours INT NOT NULL,
     FOREIGN KEY (ID_Professeur) REFERENCES Professeur(ID) ON DELETE CASCADE,
-    FOREIGN KEY (ID_Cours) REFERENCES Cours(ID) ON DELETE CASCADE
-    UNIQUE (ID_Professeur, ID_Cours)
+    FOREIGN KEY (ID_Cours) REFERENCES Cours(ID) ON DELETE CASCADE,
+    CONSTRAINT unique_professeur_cours UNIQUE (ID_Professeur, ID_Cours)
 );
 
 CREATE TABLE Groupe_Professeur (
@@ -118,7 +119,8 @@ CREATE TABLE Groupe_Professeur (
     ID_Professeur INT NOT NULL,
     ID_Groupe INT NOT NULL,
     FOREIGN KEY (ID_Professeur) REFERENCES Professeur(ID) ON DELETE CASCADE,
-    FOREIGN KEY (ID_Groupe) REFERENCES Groupe(ID) ON DELETE CASCADE
+    FOREIGN KEY (ID_Groupe) REFERENCES Groupe(ID) ON DELETE CASCADE,
+    CONSTRAINT unique_professeur_groupe UNIQUE (ID_Professeur, ID_Groupe)
 );
 
 CREATE TABLE TentativesConnexion (

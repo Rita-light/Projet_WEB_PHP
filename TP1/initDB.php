@@ -1,6 +1,6 @@
 <?php
 $host = 'tp1-db-1';
-$dbname = 'Universite2';
+$dbname = 'Universite3';
 $user = 'root';
 $pass = 'root';
 
@@ -9,9 +9,13 @@ try {
     $pdo = new PDO("mysql:host=$host;charset=utf8mb4", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+     // Suppression de la base existante
+    $pdo->exec("DROP DATABASE IF EXISTS `$dbname`;");
+    echo " Base de données '$dbname' supprimée si elle existait.\n";
+
     //  Création de la base de données si elle n'existe pas
-    $pdo->exec("CREATE DATABASE IF NOT EXISTS `$dbname` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
-    echo " Base de données '$dbname' créée ou déjà existante.\n";
+    $pdo->exec("CREATE DATABASE `$dbname` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+    echo " Base de données '$dbname' créée \n";
 
     //  Se reconnecter à la base créée
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass);
@@ -47,8 +51,13 @@ try {
     executeSqlFile($pdo, 'fichierTout/creation.sql');
 
     //  Exécuter insertion
-    executeSqlFile($pdo, 'fichierTout/insertion.sql');
-    executeSqlFile($pdo, 'fichierTout/etudiant.sql');
+    // Insertion des données via un fichier PHP
+    if (file_exists('fichierTout/insertionDonne.php')) {
+        require 'fichierTout/insertionDonne.php';
+        echo "insertionDonne.php exécuté.\n";
+    } else {
+        echo "Fichier 'insertionDonne.php' introuvable.\n";
+    }
 
     // Exécuter declencheur
     $query = " 

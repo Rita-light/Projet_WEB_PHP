@@ -1,7 +1,7 @@
 <?php
-require_once '../lib/Security.php';
+require_once (__DIR__ . '/../lib/Security.php');
 
-abstract class Utilisateur {
+class Utilisateur {
     protected $id;
     protected $nom;
     protected $prenom;
@@ -44,7 +44,7 @@ abstract class Utilisateur {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    abstract public function getType();
+     
 
     public function getNomComplet() {
         return $this->prenom . ' ' . $this->nom;
@@ -83,7 +83,8 @@ abstract class Utilisateur {
     /**
      * Ajouetr le role
      */
-    protected function ajouterRole($db, $nomRole) {
+    public function ajouterRole($db, $nomRole) {
+
         // 1. Trouver l'ID du rôle
         $query = "SELECT ID FROM Role WHERE Nom = :nomRole";
         $stmt = $db->prepare($query);
@@ -104,6 +105,7 @@ abstract class Utilisateur {
             ':idUtilisateur' => $this->id,
             ':idRole' => $roleId
         ]);
+
     }
 
 }

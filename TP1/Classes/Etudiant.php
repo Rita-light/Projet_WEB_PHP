@@ -14,10 +14,6 @@ class Etudiant extends Utilisateur {
     }
 
 
-    public function getType() {
-        return 'Etudiant';
-    }
-
     /**
      * Methode qui permet de creer et d'ajouter un nouvel étudiant dans la bd
      */
@@ -54,7 +50,7 @@ class Etudiant extends Utilisateur {
         }
 
         // Étape 3 : ajouter le rôle Étudiant
-        $this->ajouterRole($dbConnection, 'Etudiant');
+        $this->ajouterRole($dbConnection, 'Étudiant');
     
         return $this->numeroDA; // Retourne le DA généré
     }
