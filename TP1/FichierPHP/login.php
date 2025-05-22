@@ -2,6 +2,7 @@
 require_once '../config/db.php';
 require_once '../lib/Security.php';
 require_once '../lib/Validation.php';
+require_once '../lib/Journalisation.php';
 
 // Sécurisation des cookies de session
 
@@ -56,6 +57,9 @@ if ($validation->fails()) {
 //Vérifier le nombre de tentative de connexion
 
 if ($validation->estBloque($dbConnection, $email, $ip)) {
+
+    enregistrerEvenementConnexion('erreur_securite', $dbConnection, $utilisateur['ID'] ?? null, 'Tentative d\'accès à une page non autorisée, adresse ip bloqué');
+
      echo "<script>
         alert('Trop de tentatives de connexion. Veuillez réessayer dans 15 minutes.');
         window.location.href = '../FichierHTML/connexion.html';
@@ -127,9 +131,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                 }
 
-                //supprimer les tentative echoué
+                //supprimer les tentative echoué et enregitrement de la connexion
                 $validation->reinitialiserTentatives($dbConnection, $email, $ip);
 
+                enregistrerEvenementConnexion('connexion', $dbConnection, $utilisateur['ID'], 'Connexion réussie');
 
                 // Étape 5 : Rediriger selon le rôle (exemple)
                 header("Location: ../FichierHTML/acceuil.php");
@@ -141,6 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Enregistrer la tentative échouée
                 $validation->enregistrerTentative($dbConnection, $email, $ip) ;
 
+                enregistrerEvenementConnexion('Echec', $dbConnection, null, 'Échec de connexion pour email : ' . $email);
                 $_SESSION['error_message'] = "Mot de passe incorrect.";
                 header("Location: ../FichierHTML/connexion.html");
                 exit();

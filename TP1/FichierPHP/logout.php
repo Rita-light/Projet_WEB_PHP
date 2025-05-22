@@ -1,5 +1,12 @@
 <?php
 session_start();
+
+require_once '../config/db.php';
+require_once '../lib/Journalisation.php';
+
+$idUtilisateur = $_SESSION['user_id'] ?? null;
+enregistrerEvenementConnexion('deconnexion', $dbConnection, $idUtilisateur, 'Déconnexion manuelle');
+
 session_unset();
 session_destroy(); // Supprimer toutes les données de session
 

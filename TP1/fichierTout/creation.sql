@@ -127,4 +127,15 @@ CREATE TABLE TentativesConnexion (
     TentativeLe DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE JournalConnexion (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    ID_Utilisateur INT,
+    AdresseIP VARCHAR(45),
+    TypeEvenement ENUM('connexion', 'deconnexion', 'echec', 'erreur_securite') NOT NULL,
+    Description TEXT,
+    Moment DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (ID_Utilisateur) REFERENCES Utilisateur(ID) ON DELETE SET NULL
+);
+
+
 
