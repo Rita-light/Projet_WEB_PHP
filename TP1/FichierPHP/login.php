@@ -1,31 +1,9 @@
 <?php
+require_once '../FichierPHP/session_init.php';
 require_once '../config/db.php';
 require_once '../lib/Security.php';
 require_once '../lib/Validation.php';
 require_once '../lib/Journalisation.php';
-
-// Sécurisation des cookies de session
-
-/*session_name("CookieSessionTpWeb");
-
-
-ini_set('session.cookie_samesite', 'Strict');
-//ini_set('session.use_trans_sid', 0);
-//ini_set('session.use_strict_mode', 1);*/
-session_set_cookie_params(0, '/', '', false, true);
-session_start();
-
-
-// Démarrage de la session
-//session_regenerate_id(true);
-
-
-// ------------ Générer le jeton csrf de session -----------------------
-
-if (empty($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
-
 
 
 /*--------------------------------------------------------------------------
@@ -33,6 +11,13 @@ if (empty($_SESSION['csrf_token'])) {
 ----------------------------------------------------------------------------*/
 
 $validation = new Validation();
+$security = new Security();
+
+// ------------ Générer le jeton csrf de session -----------------------
+
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = $security->generateToken();
+}
 
 //Nettoyage et validation de l'email
 
@@ -73,8 +58,6 @@ if ($validation->estBloque($dbConnection, $email, $ip)) {
      exit();
 }
 
-
-$security = new Security();
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

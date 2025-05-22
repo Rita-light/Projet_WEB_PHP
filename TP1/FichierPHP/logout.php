@@ -1,6 +1,5 @@
 <?php
-session_start();
-
+require_once '../FichierPHP/session_init.php';
 require_once '../config/db.php';
 require_once '../lib/Journalisation.php';
 
