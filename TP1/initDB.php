@@ -59,6 +59,14 @@ try {
         echo "Fichier 'insertionDonne.php' introuvable.\n";
     }
 
+    // recuper donne test
+    if (file_exists('FichierPHP/recupererDonneTest.php')) {
+        require 'FichierPHP/recupererDonneTest.php';
+        echo "recupererDonneTest.php exécuté., donné recupéré\n";
+    } else {
+        echo "Fichier recupererDonneTest.php introuvable.\n";
+    }
+
     // Exécuter declencheur
     $query = " 
         CREATE TRIGGER Verifier_Association_Before_Insert

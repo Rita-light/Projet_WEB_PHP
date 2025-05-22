@@ -1,0 +1,31 @@
+==== Etudiant ====
+ID: 11 | Email: francois.brunet233@etu.univ.com | Mot de passe: etu123
+ID: 12 | Email: claire.perrot370@etu.univ.com | Mot de passe: etu123
+ID: 13 | Email: samuel.fabre674@etu.univ.com | Mot de passe: etu123
+ID: 14 | Email: emma.pelletier329@etu.univ.com | Mot de passe: etu123
+ID: 15 | Email: victor.perrot172@etu.univ.com | Mot de passe: etu123
+
+==== Professeur ====
+ID: 2 | Email: david.robert404@example.com | Mot de passe: prof1234
+ID: 3 | Email: victor.moreau161@example.com | Mot de passe: prof1234
+ID: 4 | Email: victor.renard513@example.com | Mot de passe: prof1234
+ID: 6 | Email: maxime.poirier147@example.com | Mot de passe: prof1234
+ID: 8 | Email: francois.morin776@example.com | Mot de passe: prof1234
+
+==== ProfesseurCoordo ====
+ID: 1 | Email: bob.girard190@example.com | Mot de passe: prof1234
+ID: 5 | Email: julien.fortin937@example.com | Mot de passe: prof1234
+ID: 7 | Email: samuel.girard820@example.com | Mot de passe: prof1234
+
+==== ProfesseurAdmin ====
+
+==== Coordo ====
+ID: 43 | Email: luc.morin@univ.com | Mot de passe: coordo1234
+ID: 44 | Email: julie.desrosiers@univ.com | Mot de passe: coordo1234
+
+==== Admin ====
+ID: 41 | Email: martin.laforest@univ.com | Mot de passe: admin1234
+ID: 42 | Email: sophie.brunet@univ.com | Mot de passe: admin1234
+
+==== ProfesseurCoordoAdmin ====
+

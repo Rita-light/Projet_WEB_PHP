@@ -177,8 +177,7 @@ try {
     ];
 
     foreach ($admins as [$prenom, $nom, $naissance, $email]) {
-        $motDePasseAdmin = Security::hashPassword('admin1234');
-        $admin = new Utilisateur(null, $nom, $prenom, $naissance, $email, $motDePasseAdmin);
+        $admin = new Utilisateur(null, $nom, $prenom, $naissance, $email, 'admin1234');
         $admin->create($dbConnection);
         // Vérification de l'ID
         try {
@@ -196,8 +195,7 @@ try {
     ];
 
     foreach ($coordos as [$prenom, $nom, $naissance, $email]) {
-        $motDePasseCoordo = Security::hashPassword('coordo1234');
-        $coordo = new Utilisateur(null, $nom, $prenom, $naissance, $email, $motDePasseCoordo);
+        $coordo = new Utilisateur(null, $nom, $prenom, $naissance, $email, 'coordo1234');
         $coordo->create($dbConnection);
         $coordo->ajouterRole($dbConnection, 'Coordonnateur');
     }
