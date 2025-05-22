@@ -20,13 +20,18 @@ class CoursEtudiant {
 
     // Lire tous les étudiants inscrits dans un cours donné
     public static function readByCours($dbConnection, $idCours) {
-        $query = "SELECT * FROM Etudiant 
-                  INNER JOIN Cours_Etudiant ON Etudiant.ID = Cours_Etudiant.ID_Etudiant
-                  WHERE Cours_Etudiant.ID_Cours = :idCours";
+        $query = "
+            SELECT Etudiant.ID, Utilisateur.Nom, Utilisateur.Prenom
+            FROM Etudiant
+            INNER JOIN Cours_Etudiant ON Etudiant.ID = Cours_Etudiant.ID_Etudiant
+            INNER JOIN Utilisateur ON Etudiant.ID = Utilisateur.ID
+            WHERE Cours_Etudiant.ID_Cours = :idCours
+        ";
         $stmt = $dbConnection->prepare($query);
         $stmt->execute([':idCours' => $idCours]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
     // Supprimer un étudiant d'un cours
     public static function delete($dbConnection, $idCours, $idEtudiant) {

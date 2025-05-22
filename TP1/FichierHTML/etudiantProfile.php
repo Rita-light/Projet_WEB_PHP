@@ -47,7 +47,7 @@ if (!isset($etudiant) || !$etudiant) {
         <input type="date" name="dateNaissance" value="<?php echo htmlspecialchars($etudiant['DateNaissance']); ?>" required><br>
 
         <label>Avatar actuel :</label><br>
-        <img src="<?php echo htmlspecialchars($etudiant['Avatar']?? '', ENT_QUOTES) ; ?>" alt="Avatar de l'étudiant" width="100"><br>
+        <img src="<?php echo htmlspecialchars(($etudiant['Avatar'] ?? '') . '?v=' . time(), ENT_QUOTES); ?>" alt="Avatar de l'étudiant" width="100"><br>
        
 
         <label>Avatar :</label>

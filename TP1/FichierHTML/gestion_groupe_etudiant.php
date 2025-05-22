@@ -43,11 +43,41 @@ require_once '../FichierPHP/gestGroupeEtudiant.php';
         <label for="etudiant">Étudiant :</label>
         <select name="etudiant" id="etudiant" required>
             <option value="">-- Sélectionnez un Étudiant --</option>
-            <?php afficherEtudiants($dbConnection); ?>
+            <!-- Cette liste sera remplie dynamiquement via JavaScript -->
         </select>
 
         <input type="submit" value="Ajouter">
     </form>
+
+    <script>
+        document.getElementById('groupe').addEventListener('change', function () {
+            const groupeId = this.value;
+
+            // Réinitialiser la liste des étudiants
+            const etudiantSelect = document.getElementById('etudiant');
+            etudiantSelect.innerHTML = '<option value="">-- Chargement... --</option>';
+
+            if (groupeId !== '') {
+                fetch('../FichierPHP/getEtudiantsParCours.php?idGroupe=' + encodeURIComponent(groupeId))
+                    .then(response => response.json())
+                    .then(data => {
+                        etudiantSelect.innerHTML = '<option value="">-- Sélectionnez un Étudiant --</option>';
+                        data.forEach(etudiant => {
+                            const option = document.createElement('option');
+                            option.value = etudiant.ID;
+                            option.textContent = etudiant.Nom + ' ' + etudiant.Prenom;
+                            etudiantSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        etudiantSelect.innerHTML = '<option value="">Erreur de chargement</option>';
+                        console.error('Erreur:', error);
+                    });
+            } else {
+                etudiantSelect.innerHTML = '<option value="">-- Sélectionnez un Étudiant --</option>';
+            }
+        });
+    </script>
 </main>
 </body>
 </html>

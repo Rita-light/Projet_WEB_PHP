@@ -110,6 +110,7 @@ CREATE TABLE Cours_Enseignant (
     ID_Cours INT NOT NULL,
     FOREIGN KEY (ID_Professeur) REFERENCES Professeur(ID) ON DELETE CASCADE,
     FOREIGN KEY (ID_Cours) REFERENCES Cours(ID) ON DELETE CASCADE
+    UNIQUE (ID_Professeur, ID_Cours)
 );
 
 CREATE TABLE Groupe_Professeur (

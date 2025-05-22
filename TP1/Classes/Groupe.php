@@ -64,5 +64,15 @@ class Groupe {
         return $stmt->fetchAll(PDO::FETCH_ASSOC); // Return the result as an associative array
     }
 
+    public static function getIdCoursParGroupe($db, $idGroupe) {
+        $query = "SELECT ID_Cours FROM Groupe WHERE ID = :idGroupe";
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':idGroupe', $idGroupe, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ? $result['ID_Cours'] : null;
+    }
+
+
 }
 ?>

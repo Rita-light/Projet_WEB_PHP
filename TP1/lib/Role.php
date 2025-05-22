@@ -12,7 +12,6 @@ $pagesParRole = [
     ],
     'Coordonnateur' => [
         ['label' => 'Gestion des cours', 'url' => 'gestionCours.php'],
-        ['label' => 'Gestion des étudiants', 'url' => 'gestEtudiant.php'],
     ],
     'Administrateur' => [
         ['label' => 'Gestion des cours', 'url' => 'gestionCours.php'],
