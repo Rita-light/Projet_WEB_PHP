@@ -44,33 +44,7 @@ class CoursEnseignant {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Récupère les associations entre les cours et les enseignants pour un département donné.
-     *
-     * Cette méthode retourne une liste des cours avec les enseignants associés dans un département spécifique.
-     *
-     * @param PDO $dbConnection Connexion à la base de données.
-     * @param int $departementId Identifiant du département.
-     * @return array Liste des associations (Nom du cours, Nom de l'enseignant, ID de l'association).
-     *
-     */
-    /*public static function getAssoc($dbConnection, $departementId){
-        $queryAssociations = "
-            SELECT Cours.Nom AS NomCours, 
-                CONCAT(Professeur.Nom, ' ', Professeur.Prenom) AS NomEnseignant, 
-                Cours_Enseignant.ID AS AssociationID
-            FROM Cours_Enseignant
-            JOIN Cours ON Cours.ID = Cours_Enseignant.ID_Cours
-            JOIN Professeur ON Professeur.ID = Cours_Enseignant.ID_Professeur
-            WHERE Cours.ID_Departement = :departementId
-        ";
-        $stmtAssociations = $dbConnection->prepare($queryAssociations);
-        $stmtAssociations->bindValue(':departementId', $departementId);
-        $stmtAssociations->execute();
-        $associations = $stmtAssociations->fetchAll(PDO::FETCH_ASSOC);
-        
-        return $associations;
-    }*/
+    
 
    public static function getAssoc($dbConnection, $departementId) {
         $queryAssociations = "
@@ -98,5 +72,40 @@ class CoursEnseignant {
         $stmt->execute();
         return $stmt->rowCount() ;
     }
+
+    public static function getToutesLesAssociations($dbConnection) {
+        $query = "
+            SELECT 
+                Cours.Nom AS NomCours, 
+                CONCAT(Utilisateur.Nom, ' ', Utilisateur.Prenom) AS NomEnseignant, 
+                Cours_Enseignant.ID AS AssociationID
+            FROM Cours_Enseignant
+            JOIN Cours ON Cours.ID = Cours_Enseignant.ID_Cours
+            JOIN Professeur ON Professeur.ID = Cours_Enseignant.ID_Professeur
+            JOIN Utilisateur ON Utilisateur.ID = Professeur.ID
+        ";
+
+        $stmt = $dbConnection->prepare($query);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+    // Dans CoursEnseignant.php
+public static function getProfesseursParCours($db, $idCours) {
+    $stmt = $db->prepare("
+        SELECT Professeur.ID, Utilisateur.Nom, Utilisateur.Prenom
+        FROM Professeur
+        JOIN Utilisateur ON Utilisateur.ID = Professeur.ID
+        JOIN CoursEnseignant ON CoursEnseignant.ID_Professeur = Professeur.ID
+        WHERE CoursEnseignant.ID_Cours = :idCours
+    ");
+    $stmt->bindValue(':idCours', $idCours, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
 }
 ?>

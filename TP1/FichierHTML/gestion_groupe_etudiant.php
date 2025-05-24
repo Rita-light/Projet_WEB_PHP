@@ -1,6 +1,6 @@
 <?php
-require_once '../FichierPHP/verifierConnexion.php';
-require_once '../FichierPHP/gestGroupeEtudiant.php';
+require_once(__DIR__ . '/../FichierPHP/verifierConnexion.php');
+require_once(__DIR__ . '/../FichierPHP/gestGroupeEtudiant.php');
 ?>
 
 <!DOCTYPE html>

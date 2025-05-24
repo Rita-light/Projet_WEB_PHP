@@ -96,43 +96,45 @@ class GroupeEtudiant {
         ]);
     }
 
-    /*public static function getAssociationsByDepartement($db, $departementId) {
+    public static function getAssociationsByDepartement($db, $departementId) {
         $query = "
             SELECT G.Nom AS GroupeNom, 
-                   E.Nom, 
-                   E.Prenom
+                U.Nom, 
+                U.Prenom
             FROM Groupe_Etudiant GE
             JOIN Groupe G ON GE.ID_Groupe = G.ID
             JOIN Cours C ON G.ID_Cours = C.ID
             JOIN Etudiant E ON GE.ID_Etudiant = E.ID
+            JOIN Utilisateur U ON E.ID = U.ID
             WHERE C.ID_Departement = :departementId
-            ORDER BY G.Nom, E.Nom
+            ORDER BY G.Nom, U.Nom
         ";
+        
         $stmt = $db->prepare($query);
         $stmt->bindValue(':departementId', $departementId, PDO::PARAM_INT);
         $stmt->execute();
+        
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }*/
+    }
 
-    public static function getAssociationsByDepartement($db, $departementId) {
-    $query = "
-        SELECT G.Nom AS GroupeNom, 
-               U.Nom, 
-               U.Prenom
-        FROM Groupe_Etudiant GE
-        JOIN Groupe G ON GE.ID_Groupe = G.ID
-        JOIN Cours C ON G.ID_Cours = C.ID
-        JOIN Etudiant E ON GE.ID_Etudiant = E.ID
-        JOIN Utilisateur U ON E.ID = U.ID
-        WHERE C.ID_Departement = :departementId
-        ORDER BY G.Nom, U.Nom
-    ";
-    
-    $stmt = $db->prepare($query);
-    $stmt->bindValue(':departementId', $departementId, PDO::PARAM_INT);
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+    public static function getAllAssociations($db) {
+        $query = "
+            SELECT G.Nom AS GroupeNom, 
+                U.Nom, 
+                U.Prenom
+            FROM Groupe_Etudiant GE
+            JOIN Groupe G ON GE.ID_Groupe = G.ID
+            JOIN Cours C ON G.ID_Cours = C.ID
+            JOIN Etudiant E ON GE.ID_Etudiant = E.ID
+            JOIN Utilisateur U ON E.ID = U.ID
+            ORDER BY G.Nom, U.Nom
+        ";
+        
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
 
 }

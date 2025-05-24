@@ -32,6 +32,16 @@ class Groupe {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public static function getTousLesGroupes($db) {
+        $query = "SELECT ID, Nom FROM Groupe";
+        
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
     public function update($dbConnection) {
         $query = "UPDATE Groupe SET Numero = :numero, Nom = :nom, Description = :description, ID_Cours = :idCours WHERE ID = :id";
         $stmt = $dbConnection->prepare($query);
@@ -53,7 +63,7 @@ class Groupe {
 
     public static function getGroupsByDepartement($db, $departementId) {
         $query = "
-            SELECT Groupe.ID, Groupe.Nom AS NomGroupe
+            SELECT Groupe.ID, Groupe.Nom AS Nom
             FROM Groupe
             JOIN Cours ON Groupe.ID_Cours = Cours.ID
             WHERE Cours.ID_Departement = :departementId

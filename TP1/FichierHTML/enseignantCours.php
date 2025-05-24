@@ -1,6 +1,6 @@
 <?php
-require_once '../FichierPHP/verifierConnexion.php'; // Vérifie si l'enseignant est connecté
-require_once '../FichierPHP/recupererCoursEnseignant.php'; // Récupère les données
+    require_once(__DIR__ . '/../FichierPHP/verifierConnexion.php'); 
+    require_once(__DIR__ . '/../FichierPHP/recupererCoursEnseignant.php'); 
 ?>
 
 <!DOCTYPE html>

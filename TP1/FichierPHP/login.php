@@ -1,9 +1,9 @@
 <?php
-require_once '../FichierPHP/session_init.php';
-require_once '../config/db.php';
-require_once '../lib/Security.php';
-require_once '../lib/Validation.php';
-require_once '../lib/Journalisation.php';
+require_once(__DIR__ . '/../FichierPHP/session_init.php');
+require_once(__DIR__ . '/../config/db.php');
+require_once(__DIR__ . '/../lib/Security.php');
+require_once(__DIR__ . '/../lib/Validation.php');
+require_once(__DIR__ . '/../lib/Journalisation.php');
 
 
 /*--------------------------------------------------------------------------

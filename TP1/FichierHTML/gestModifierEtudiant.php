@@ -1,7 +1,7 @@
 <?php
-require_once '../FichierPHP/verifierConnexion.php'; 
-require_once '../config/db.php';
-require_once '../Classes/Etudiant.php'; // Inclusion de la classe Etudiant
+require_once(__DIR__ . '/../FichierPHP/verifierConnexion.php');
+require_once(__DIR__ . '/../config/db.php');
+require_once(__DIR__ . '/../Classes/Etudiant.php'); // Inclusion de la classe Etudiant
 
 // Vérifier si le NumeroDA est passé dans l'URL
 if (isset($_GET['user_id']) && isset($_GET['numeroDA'])) {

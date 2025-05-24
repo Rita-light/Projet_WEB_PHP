@@ -1,6 +1,6 @@
 <?php
-require_once '../FichierPHP/verifierConnexion.php'; // Vérification session
-require_once '../FichierPHP/gestCoursProfesseur.php'
+require_once(__DIR__ . '/../FichierPHP/verifierConnexion.php'); // Vérification session
+require_once(__DIR__ . '/../FichierPHP/gestCoursProfesseur.php');
 ?>
 
 <!DOCTYPE html>

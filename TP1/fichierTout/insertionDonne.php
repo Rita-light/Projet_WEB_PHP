@@ -188,7 +188,7 @@ try {
         }
     }
 
-    // ---------- Coordonnateurs ----------
+    /*// ---------- Coordonnateurs ----------
     $coordos = [
         ['Luc', 'Morin', '1978-04-02', 'luc.morin@univ.com'],
         ['Julie', 'Desrosiers', '1982-12-19', 'julie.desrosiers@univ.com'],
@@ -198,7 +198,7 @@ try {
         $coordo = new Utilisateur(null, $nom, $prenom, $naissance, $email, 'coordo1234');
         $coordo->create($dbConnection);
         $coordo->ajouterRole($dbConnection, 'Coordonnateur');
-    }
+    }*/
 
     //----------------------- insertion relation cours / étudiant -----
 
@@ -262,8 +262,6 @@ try {
         CoursEnseignant::assign($dbConnection, $idCours, $idProf);
         echo " Professeur $idProf assigné au cours $idCours (département $idDeptCours)\n";
     }
-
-
 
 
 } catch (Exception $e) {

@@ -1,4 +1,5 @@
 <?php
+require_once 'CoursEnseignant.php';
 
 class GroupeProfesseur {
     private $idGroupe;
@@ -55,41 +56,55 @@ class GroupeProfesseur {
         ]);
     }
 
-
-    /*public static function getAssociationsByDepartement($db, $departementId) {
+    public static function getAssociationsByDepartement($db, $departementId) {
         $query = "
             SELECT Groupe.Nom AS NomGroupe, 
-                   CONCAT(Professeur.Nom, ' ', Professeur.Prenom) AS NomProfesseur
+                CONCAT(Utilisateur.Nom, ' ', Utilisateur.Prenom) AS NomProfesseur
             FROM Groupe_Professeur
             JOIN Groupe ON Groupe_Professeur.ID_Groupe = Groupe.ID
             JOIN Professeur ON Groupe_Professeur.ID_Professeur = Professeur.ID
+            JOIN Utilisateur ON Professeur.ID = Utilisateur.ID
             JOIN Cours ON Groupe.ID_Cours = Cours.ID
             WHERE Cours.ID_Departement = :departementId
         ";
+        
         $stmt = $db->prepare($query);
-        $stmt->bindValue(':departementId', $departementId, PDO::PARAM_INT); // Ensure parameter type matches
+        $stmt->bindValue(':departementId', $departementId, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC); // Return the result as an associative array
-    }*/
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
-    public static function getAssociationsByDepartement($db, $departementId) {
-    $query = "
-        SELECT Groupe.Nom AS NomGroupe, 
-               CONCAT(Utilisateur.Nom, ' ', Utilisateur.Prenom) AS NomProfesseur
-        FROM Groupe_Professeur
-        JOIN Groupe ON Groupe_Professeur.ID_Groupe = Groupe.ID
-        JOIN Professeur ON Groupe_Professeur.ID_Professeur = Professeur.ID
-        JOIN Utilisateur ON Professeur.ID = Utilisateur.ID
-        JOIN Cours ON Groupe.ID_Cours = Cours.ID
-        WHERE Cours.ID_Departement = :departementId
-    ";
-    
-    $stmt = $db->prepare($query);
-    $stmt->bindValue(':departementId', $departementId, PDO::PARAM_INT);
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+    public static function getToutesLesAssociations($db) {
+        $query = "
+            SELECT Groupe.Nom AS NomGroupe, 
+                CONCAT(Utilisateur.Nom, ' ', Utilisateur.Prenom) AS NomProfesseur
+            FROM Groupe_Professeur
+            JOIN Groupe ON Groupe_Professeur.ID_Groupe = Groupe.ID
+            JOIN Professeur ON Groupe_Professeur.ID_Professeur = Professeur.ID
+            JOIN Utilisateur ON Professeur.ID = Utilisateur.ID
+        ";
 
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function getProfesseursParGroupe($db, $groupeId) {
+        // Trouver l’ID du cours associé à ce groupe
+        $stmt = $db->prepare("SELECT ID_Cours FROM Groupe WHERE ID = :id");
+        $stmt->bindValue(':id', $groupeId, PDO::PARAM_INT);
+        $stmt->execute();
+        $cours = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$cours) {
+            return [];
+        }
+
+        
+
+        // Récupérer les professeurs qui enseignent ce cours
+        return CoursEnseignant::getProfesseursParCours($db, $cours['ID']);
+    }
 
 }
 ?>

@@ -1,6 +1,6 @@
 <?php
-  require_once '../FichierPHP/verifierConnexion.php'; 
-  require_once '../FichierPHP/recupererProfilEnseignant.php'; 
+  require_once(__DIR__ . '/../FichierPHP/verifierConnexion.php'); 
+  require_once(__DIR__ . '/../FichierPHP/recupererProfilEnseignant.php');
 ?>
 
 <!DOCTYPE html>

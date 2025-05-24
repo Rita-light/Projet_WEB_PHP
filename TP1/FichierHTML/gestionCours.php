@@ -1,5 +1,5 @@
 <?php
-require_once '../FichierPHP/verifierConnexion.php'
+require_once(__DIR__ . '/../FichierPHP/verifierConnexion.php');
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -15,7 +15,7 @@ require_once '../FichierPHP/verifierConnexion.php'
   </header>
 
   <main>
-    <h1>Bienvenue, Coordonnateur</h1>
+    <h1>Bienvenue</h1>
     <p>Sélectionnez une option pour gérer les associations dans votre département :</p>
     <a href="acceuil.php">Acceuil</a>
     <a href="gestion_cours_enseignant.php">Gérer les Cours-Enseignants</a>

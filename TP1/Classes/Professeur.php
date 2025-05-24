@@ -1,5 +1,5 @@
 <?php
-require_once 'Utilisateur.php';
+require_once(__DIR__ . '/Utilisateur.php');
 
 class Professeur extends Utilisateur {
     private $dateEmbauche;
@@ -43,7 +43,7 @@ class Professeur extends Utilisateur {
         $query = "
             SELECT 
                 u.ID, u.Nom, u.Prenom, u.DateNaissance, u.Email,
-                p.DateEmbauche, p.Coordonnateur, d.Nom AS Departement
+                p.DateEmbauche, d.Nom AS Departement
             FROM Professeur p
             INNER JOIN Utilisateur u ON p.ID = u.ID
             LEFT JOIN Departement d ON p.ID_Departement = d.ID
@@ -97,21 +97,36 @@ class Professeur extends Utilisateur {
             ':email' => $email
         ]);
 
-       /* // Mise à jour dans Professeur
-        $queryProf = "
-            UPDATE Professeur
-            SET DateEmbauche = :dateEmbauche, Coordonnateur = :coordonnateur, ID_Departement = :idDepartement
-            WHERE ID = :id
-        ";
-        $stmt = $dbConnection->prepare($queryProf);
-        $stmt->execute([
-            ':id' => $id,
-            ':dateEmbauche' => $dateEmbauche,
-            ':coordonnateur' => $coordonnateur,
-            ':idDepartement' => $idDepartement
-        ]);*/
+    
     }
 
+    public static function getTousLesProfesseurs($db) {
+        $query = "
+            SELECT Professeur.ID, Utilisateur.Nom, Utilisateur.Prenom
+            FROM Professeur
+            JOIN Utilisateur ON Professeur.ID = Utilisateur.ID
+        ";
+        
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function getByCours($db, $idCours) {
+        $query = "
+            SELECT P.ID, U.Nom, U.Prenom
+            FROM Professeur P
+            JOIN Utilisateur U ON P.ID = U.ID
+            JOIN Cours_Enseignant CE ON P.ID = CE.ID_Professeur
+            WHERE CE.ID_Cours = :idCours
+        ";
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':idCours', $idCours, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+    }
 
 
     public static function getProfByDepartement($dbConnection, $departementId) {
@@ -126,8 +141,6 @@ class Professeur extends Utilisateur {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
-
 
 
     public static function getGroupesParCours($dbConnection, $idProfesseur) {

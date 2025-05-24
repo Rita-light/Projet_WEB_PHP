@@ -50,12 +50,6 @@ class Utilisateur {
         return $this->prenom . ' ' . $this->nom;
     }
 
-    /*public function delete($dbConnection) {
-        $query = "DELETE FROM " . $this->getType() . " WHERE ID = :id";
-        $stmt = $dbConnection->prepare($query);
-        $stmt->execute([':id' => $this->id]);
-    }*/
-
     public function update($dbConnection) {
         $sql = "UPDATE Utilisateur SET nom = :nom, prenom = :prenom, dateNaissance = :dateNaissance, email = :email, password = :password WHERE ID = :id";
         $stmt = $db->prepare($sql);

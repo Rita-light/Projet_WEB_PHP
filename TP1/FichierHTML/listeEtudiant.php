@@ -1,6 +1,6 @@
 <?php
-require_once '../FichierPHP/verifierConnexion.php'; // Vérification de connexion
-require_once '../FichierPHP/listeGroupe.php'; // Récupération des groupes
+require_once(__DIR__ . '/../FichierPHP/verifierConnexion.php'); // Vérification de connexion
+require_once(__DIR__ . '/../FichierPHP/listeGroupe.php'); // Récupération des groupes
 ?>
 
 <!DOCTYPE html>

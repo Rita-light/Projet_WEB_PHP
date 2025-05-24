@@ -1,6 +1,6 @@
 <?php
-require_once '../FichierPHP/verifierConnexion.php'; // Vérification session active
-require_once '../FichierPHP/recupererProfilEtudiant.php'; // Inclure le fichier de récupération
+require_once(__DIR__ . '/../FichierPHP/verifierConnexion.php'); // Vérification session active
+require_once(__DIR__ . '/../FichierPHP/recupererProfilEtudiant.php'); // Inclure le fichier de récupération
 
 // Assurez-vous que $etudiant est défini via recuperer_profil_etudiant.php
 if (!isset($etudiant) || !$etudiant) {

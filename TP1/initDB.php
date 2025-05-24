@@ -4,7 +4,6 @@ $dbname = 'Universite3';
 $user = 'root';
 $pass = 'root';
 
-try {
     //  Connexion sans base pour la création
     $pdo = new PDO("mysql:host=$host;charset=utf8mb4", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -60,8 +59,8 @@ try {
     }
 
     // recuper donne test
-    if (file_exists('FichierPHP/recupererDonneTest.php')) {
-        require 'FichierPHP/recupererDonneTest.php';
+    if (file_exists('fichierTout/recupererDonneTest.php')) {
+        require 'fichierTout/recupererDonneTest.php';
         echo "recupererDonneTest.php exécuté., donné recupéré\n";
     } else {
         echo "Fichier recupererDonneTest.php introuvable.\n";
@@ -102,7 +101,5 @@ try {
     }
     
 
-} catch (PDOException $e) {
-    echo " Erreur PDO : " . $e->getMessage() . "\n";
-}
+
 ?>

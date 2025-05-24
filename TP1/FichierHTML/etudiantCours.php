@@ -1,6 +1,6 @@
 <?php
-  require_once '../FichierPHP/verifierConnexion.php'; 
-  require_once '../FichierPHP/recupererCoursEtudiant.php'; 
+    require_once(__DIR__ . '/../FichierPHP/verifierConnexion.php'); 
+    require_once(__DIR__ . '/../FichierPHP/recupererCoursEtudiant.php');
 ?>
 
 <!DOCTYPE html>

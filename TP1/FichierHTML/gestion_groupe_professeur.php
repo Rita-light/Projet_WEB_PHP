@@ -1,6 +1,6 @@
 <?php
-require_once '../FichierPHP/verifierConnexion.php';
-require_once '../FichierPHP/gestGroupeProfesseur.php';
+require_once(__DIR__ . '/../FichierPHP/verifierConnexion.php');
+require_once(__DIR__ . '/../FichierPHP/gestGroupeProfesseur.php');
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -35,17 +35,48 @@ require_once '../FichierPHP/gestGroupeProfesseur.php';
     <form method="POST" action="../FichierPHP/gestGroupeProfesseur.php">
       <label for="groupe">Groupe :</label>
       <select name="groupe" id="groupe" required>
+        <option value="">-- Sélectionnez un Groupe --</option>
         <?php afficherGroupes($dbConnection, $departementId); ?>
       </select>
       
       <label for="enseignant">Enseignant :</label>
       <select name="enseignant" id="enseignant" required>
-        <?php afficherProfesseurs($dbConnection, $departementId); ?>
+        <option value="">-- Sélectionnez un Professeur --</option>
+        
       </select>
 
       <input type="submit" value="Ajouter">
     </form>
 
   </main>
+
+  <script>
+    document.getElementById('groupe').addEventListener('change', function () {
+        const groupeId = this.value;
+        const professeurSelect = document.getElementById('enseignant');
+        professeurSelect.innerHTML = '<option value="">-- Chargement... --</option>';
+
+        if (groupeId !== '') {
+            fetch('../FichierPHP/getProfesseurByCours.php?idGroupe=' + encodeURIComponent(groupeId))
+                .then(response => response.json())
+                .then(data => {
+                    professeurSelect.innerHTML = '<option value="">-- Sélectionnez un Professeur --</option>';
+                    data.forEach(professeur => {
+                        const option = document.createElement('option');
+                        option.value = professeur.ID;
+                        option.textContent = professeur.Nom + ' ' + professeur.Prenom;
+                        professeurSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    professeurSelect.innerHTML = '<option value="">Erreur de chargement</option>';
+                    console.error('Erreur:', error);
+                });
+        } else {
+            professeurSelect.innerHTML = '<option value="">-- Sélectionnez un Professeur --</option>';
+    }
+});
+</script>
+
 </body>
 </html>

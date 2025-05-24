@@ -11,17 +11,18 @@ if (!isset($_SESSION['user_id'])) {
     die("Erreur : ID enseignant non défini.");
 }
 
-$idEnseignant = $_SESSION['user_id'];
-$departementId = null;
+$idUtilisateur = $_SESSION['user_id']; 
+$role = $_SESSION['user_roles'][0];
+$departementId = null; 
+
+if ($role !== 'Administrateur') {
+        $departementId = Professeur::getidDepartement($dbConnection, $idUtilisateur);
+        if (!$departementId) {
+            die("Erreur : département non trouvé pour cet enseignant.");
+        }
+}
 
 try {
-    // Récupérer l'ID du département de l'enseignant
-    $departementId = Professeur::getidDepartement($dbConnection, $idEnseignant);
-
-    if (!$departementId) {
-        die("Erreur : Département non trouvé.");
-    }
-
     // Traitement de l'ajout
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['groupe'], $_POST['etudiant'])) {
         $idGroupe = $_POST['groupe'];
@@ -43,9 +44,14 @@ try {
 // ----------------------
 
 function afficherGroupes($db, $departementId) {
-    $groupes = Groupe::getGroupsByDepartement($db, $departementId); 
+    if ($departementId) {
+        $groupes = Groupe::getGroupsByDepartement($db, $departementId);
+    } else {
+        $groupes = Groupe::getTousLesGroupes($db);
+    }
+
     foreach ($groupes as $groupe) {
-        echo "<option value='" . htmlspecialchars($groupe['ID']) . "'>" . htmlspecialchars($groupe['NomGroupe']) . "</option>";
+        echo "<option value='" . htmlspecialchars($groupe['ID']) . "'>" . htmlspecialchars($groupe['Nom']) . "</option>";
     }
 }
 
@@ -58,7 +64,12 @@ function afficherEtudiants($db) {
 }
 
 function afficherAssociations($db, $departementId) {
-    $associations = GroupeEtudiant::getAssociationsByDepartement($db, $departementId);
+    if ($departementId === null) {
+        $associations = GroupeEtudiant::getAllAssociations($db);
+    } else {
+        $associations = GroupeEtudiant::getAssociationsByDepartement($db, $departementId);
+    }
+
     foreach ($associations as $row) {
         echo "<tr><td>" . htmlspecialchars($row['GroupeNom']) . "</td><td>" . htmlspecialchars($row['Nom'] . ' ' . $row['Prenom']) . "</td></tr>";
     }
