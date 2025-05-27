@@ -63,7 +63,10 @@ class GroupeEtudiant {
         $alreadyInGroupe = $stmtCheckGroupe->fetch();
 
         if ($alreadyInGroupe) {
-            die("Erreur : L'étudiant appartient déjà à un autre groupe pour ce cours.");
+            echo "<script>
+                alert(\"Erreur : L'étudiant appartient déjà à un autre groupe pour ce cours.\");
+                window.location.href = '../FichierHTML/gestion_groupe_etudiant.php';
+            </script>";
         }
 
         // Ajouter l'association

@@ -32,7 +32,10 @@ class GroupeProfesseur {
             $stmtAddProfesseur->bindValue(':idProfesseur', $idProfesseurAssoc);
             $stmtAddProfesseur->execute();
         } else {
-            die("Erreur : Ce groupe a déjà un professeur.");
+            echo "<script>
+                    alert('Erreur : Ce groupe a déjà un professeur.');
+                    window.location.href = '../FichierHTML/gestion_groupe_professeur.php';
+                </script>";
         }
     }
 

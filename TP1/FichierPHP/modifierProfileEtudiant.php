@@ -1,6 +1,6 @@
 <?php
-require_once '../config/db.php'; // Connexion à la base de données
-require_once '../Classes/Etudiant.php'; // Classe Etudiant
+require_once '../config/db.php'; 
+require_once '../Classes/Etudiant.php'; 
 require_once '../FichierPHP/verifierConnexion.php';
 
 

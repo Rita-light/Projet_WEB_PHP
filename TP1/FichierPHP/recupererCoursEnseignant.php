@@ -1,6 +1,6 @@
 <?php
-require_once '../config/db.php'; // Inclure la connexion à la base de données
-require_once '../Classes/Professeur.php'; // Inclure la classe Professeur
+require_once '../config/db.php'; 
+require_once '../Classes/Professeur.php';
 require_once '../FichierPHP/verifierConnexion.php';
 
 // Vérifiez si l'enseignant est connecté

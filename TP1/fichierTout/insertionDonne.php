@@ -61,12 +61,14 @@ try {
         } elseif ($code === 'BIO') {
             $cours = [
                 ['BIO101', 'Biologie cellulaire', 'Étude des cellules animales et végétales'],
-                ['BIO202', 'Génétique', 'Bases de la transmission génétique']
+                ['BIO202', 'Génétique', 'Bases de la transmission génétique'],
+                ['CH100', 'Chimie', 'Composition des substances quiforment l\'univers']
             ];
         } elseif ($code === 'MAT') {
             $cours = [
                 ['MAT101', 'Algèbre linéaire', 'Matrices, vecteurs et espaces vectoriels'],
-                ['MAT201', 'Calcul différentiel', 'Fonctions, limites, dérivées']
+                ['MAT201', 'Calcul différentiel', 'Fonctions, limites, dérivées'],
+                ['GC14', 'Géometrie ', 'Etude des veteurs et plans']
             ];
         }
 
@@ -125,7 +127,7 @@ try {
         $idDepartement = $dep['ID'];
 
         // Créer entre 3 et 4 professeurs pour ce département
-        $nbProfs = rand(3, 4);
+        $nbProfs = rand(4, 7);
 
         // Sélectionner un coordonnateur au hasard
         $indexCoordo = rand(0, $nbProfs - 1);
@@ -147,17 +149,16 @@ try {
     //---------------------- insertion de l'étudiant -----------------------------
     // Prénoms et noms fictifs
     
-    for ($i = 0; $i < 30; $i++) {
+    for ($i = 0; $i < 40; $i++) {
         $prenom = $prenoms[array_rand($prenoms)];
         $nom = $noms[array_rand($noms)];
         $dateNaissance = date('Y-m-d', strtotime('-' . rand(18, 25) . ' years'));
         $email = strtolower($prenom . '.' . $nom . rand(100, 999) . '@etu.univ.com');
         $password = 'etu1234';  
 
-        // Numéro DA aléatoire unique (ex: DA20250001)
         $numeroDA = null;
 
-        // Date d’inscription aléatoire entre aujourd’hui et 2 ans en arrière
+        // Date d’inscription aléatoire
         $dateInscription = date('Y-m-d', strtotime('-' . rand(0, 730) . ' days'));
 
         // Avatar nul
@@ -188,17 +189,7 @@ try {
         }
     }
 
-    /*// ---------- Coordonnateurs ----------
-    $coordos = [
-        ['Luc', 'Morin', '1978-04-02', 'luc.morin@univ.com'],
-        ['Julie', 'Desrosiers', '1982-12-19', 'julie.desrosiers@univ.com'],
-    ];
-
-    foreach ($coordos as [$prenom, $nom, $naissance, $email]) {
-        $coordo = new Utilisateur(null, $nom, $prenom, $naissance, $email, 'coordo1234');
-        $coordo->create($dbConnection);
-        $coordo->ajouterRole($dbConnection, 'Coordonnateur');
-    }*/
+    
 
     //----------------------- insertion relation cours / étudiant -----
 
@@ -216,7 +207,7 @@ try {
         shuffle($etudiantIds);
 
         // Nombre aléatoire d'étudiants à inscrire : entre 10 et 15
-        $nbInscrits = rand(7, 10);
+        $nbInscrits = rand(10, 15);
 
         // Prendre les X premiers
         $etudiantsAInscrire = array_slice($etudiantIds, 0, $nbInscrits);

@@ -1,7 +1,7 @@
 <?php
-require_once '../FichierPHP/verifierConnexion.php'; // Vérification session active
-require_once '../config/db.php'; // Connexion à la base de données
-require_once '../Classes/Etudiant.php'; // Inclusion de la classe Etudiant
+require_once '../FichierPHP/verifierConnexion.php'; 
+require_once '../config/db.php'; 
+require_once '../Classes/Etudiant.php'; 
 
 
 
@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
     die('Erreur : étudiant non connecté.');
 }
 
-$idEtudiant = $_SESSION['user_id']; // Récupérer le numéro DA de l'étudiant connecté
+$idEtudiant = $_SESSION['user_id']; 
 
 try {
     

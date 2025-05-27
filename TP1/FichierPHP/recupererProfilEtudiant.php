@@ -1,6 +1,6 @@
 <?php
-require_once '../config/db.php'; // Connexion à la base de données
-require_once '../Classes/Etudiant.php'; // Classe Etudiant
+require_once '../config/db.php'; 
+require_once '../Classes/Etudiant.php'; 
 
 
 
@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-$id = $_SESSION['user_id']; // Utiliser le numéro DA pour identifier l'étudiant
+$id = $_SESSION['user_id']; 
 
 try {
     // Récupérer les informations de l'étudiant via la méthode de la classe

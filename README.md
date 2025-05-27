@@ -16,10 +16,6 @@ Gestion des cours dans un collège
 
 ## Coordonnateur
 En plus des fonctionnalités des enseignant, le coordonnateur peut : 
-+  Gérer les étudiants
-    * Afficher les étudiants
-    * Inscrire les étudiants
-    * modifier les informations d'un étudiant
 + Gérer les cours
 
     Pour les cours de son departement, il peut ajouter et afficher les associations: 
@@ -28,22 +24,31 @@ En plus des fonctionnalités des enseignant, le coordonnateur peut :
     + Groupe et étudiant
     * Supprimer  les associations cours et enseignant
 
-# Données de test
+## Administrateur
+L'administrateur lui peut : 
++  Gérer les étudiants
+    * Afficher les étudiants
+    * Inscrire les étudiants
+    * modifier les informations d'un étudiant
++ Gérer les cours
+    Pour les cours de tout departement, il peut ajouter et afficher les associations: 
+    + Cours et enseignant
+    + Groupe et enseignant
+    + Groupe et étudiant
+    * Supprimer  les associations cours et enseignant
 
-## Etudiant
-* jean.dupont@mail.com 	password123
-* sophie.lemoine@mail.com 	password123
-* louis.lambert@mail.com 	password123
+# Information de test
 
-## professeur
-* alice.lemoine1@example.com 	password123 	
-* pierre.martin2@example.com    password123
-* eric.muller15@example.com password123
-## Coordonateur
-* jean.dupont3@example.com 		password123 
-* nadine.jacques18@example.com password123	
+* Les informations de connexion des utilisateur sont dans le fichier : ../fihierTout/utilisateur_roles.txt
+
+
 ## Fichier Important
 * fichier pour initiation de la bd : initDB.php
 * fichier pour ouverture de l'applivation : index.php
+    - Ils sont à la racine du projet
 
-Ils sont à la racine du projet
+* fichier de test unitaire : /fichierTout/testUnitaire.php
+
+* les commande pour tester mon api professeur sont dans le fichier 
+
+Ils sont à la racine du projet : /fichierTout/test.txt

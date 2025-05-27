@@ -46,7 +46,12 @@ function addEnseignant($db) {
         ]);
 
         $db->commit();
-        echo json_encode(['success' => true, 'id' => $idUtilisateur]);
+                echo json_encode([
+            'success' => true,
+            'message' => 'Enseignant ajouté avec succès',
+            'id' => $idUtilisateur
+        ]);
+
 
     } catch (PDOException $e) {
         $db->rollBack();
@@ -57,17 +62,23 @@ function addEnseignant($db) {
 
 function updateEnseignant($db, $id) {
     $data = json_decode(file_get_contents("php://input"), true);
-    $stmt = $db->prepare("UPDATE Utilisateur SET Nom = ?, Prenom = ?, Email = ? WHERE ID = ?");
-    $stmt->execute([$data['Nom'], $data['Prenom'], $data['Email'], $id]);
+    $stmt = $db->prepare("UPDATE Utilisateur SET Nom = ?, Prenom = ? WHERE ID = ?");
+    $stmt->execute([$data['Nom'], $data['Prenom'], $id]);
 
     $stmt2 = $db->prepare("UPDATE Professeur SET DateEmbauche = ?, ID_Departement = ? WHERE ID = ?");
     $stmt2->execute([$data['DateEmbauche'], $data['ID_Departement'], $id]);
 
-    echo json_encode(['success' => true]);
+    echo json_encode([
+        'success' => true,
+        'message' => 'Enseignant mis a jour avec succes'
+    ]);
 }
 
 function deleteEnseignant($db, $id) {
     $stmt = $db->prepare("DELETE FROM Utilisateur WHERE ID = ?");
     $stmt->execute([$id]);
-    echo json_encode(['success' => true]);
+    echo json_encode([
+        'success' => true,
+        'message' => 'Enseignant supprime avec succes'
+    ]);
 }

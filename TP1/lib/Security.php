@@ -81,14 +81,7 @@ class Security {
         return htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
     }
     
-    /**
-     * Vérifier si une requête est une requête AJAX
-     * @return bool True si c'est une requête AJAX, sinon false
-     */
-    public static function isAjaxRequest() {
-        return !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
-               strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
-    }
+    
     
     /**
      * Obtenir l'adresse IP du client
@@ -109,24 +102,7 @@ class Security {
         return filter_var($ip, FILTER_VALIDATE_IP) ? $ip : '0.0.0.0';
     }
     
-    /**
-     * Enregistrer une action de sécurité dans les logs
-     * @param string $action L'action effectuée
-     * @param string|null $details Détails supplémentaires
-     * @param int|null $userId ID de l'utilisateur concerné
-     */
-    public static function logSecurityAction($action, $details = null, $userId = null) {
-        $db = Database::getInstance();
-        
-        $data = [
-            'utilisateur_id' => $userId,
-            'ip_address' => self::getClientIp(),
-            'action' => $action,
-            'details' => $details
-        ];
-        
-        $db->insert('securite_logs', $data);
-    }
+   
     
     /**
      * Valider les données soumises par l'utilisateur
@@ -167,45 +143,6 @@ class Security {
         return $errors;
     }
     
-    /**
-     * Générer un mot de passe aléatoire sécurisé
-     * @param int $length Longueur du mot de passe
-     * @return string Le mot de passe généré
-     */
-    public static function generateRandomPassword($length = 16) {
-        $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+';
-        $password = '';
-        
-        for ($i = 0; $i < $length; $i++) {
-            $password .= $chars[random_int(0, strlen($chars) - 1)];
-        }
-        
-        return $password;
-    }
     
-    /**
-     * Générer un token API
-     * @return string Le token API généré
-     */
-    public static function generateApiToken() {
-        return self::generateToken(64);
-    }
     
-    /**
-     * Valider un token API
-     * @param string $token Le token à valider
-     * @return array|false Les données de l'utilisateur si le token est valide, sinon false
-     */
-    public static function validateApiToken($token) {
-        $db = Database::getInstance();
-        
-        $sql = "SELECT a.*, u.* FROM api_tokens a 
-                JOIN utilisateurs u ON a.utilisateur_id = u.id 
-                WHERE a.token = :token AND a.actif = 1 
-                AND (a.date_expiration IS NULL OR a.date_expiration > NOW())";
-        
-        $result = $db->fetchOne($sql, ['token' => $token]);
-        
-        return $result ? $result : false;
-    }
 }

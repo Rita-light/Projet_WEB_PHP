@@ -1,7 +1,4 @@
 <?php
-// Fichier à inclure dans toutes tes pages PHP
-
-// Définir un nom de session personnalisé
 session_name("MaSessionSecurisee");
 
 
